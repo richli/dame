@@ -1,5 +1,9 @@
-#!/usr/bin/env python
-import dame
+#!/usr/bin/env python2
 
-if __name__ == "__main__":
-    dame.main()
+# DEBUG
+import sys
+sys.path.append("./")
+# END DEBUG
+
+from dame.dame import main
+main()
