@@ -2,6 +2,7 @@
 TODO
 ====
 
+* As a template for package layout, use picard
 * Basic simp functionality
 
   * Copy relevant parts from imageviewer.py?
