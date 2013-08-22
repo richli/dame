@@ -14,12 +14,17 @@ import sys
 
 from PySide.QtCore import *
 from PySide.QtGui import *
+from main_window import Ui_MainWindow
 
+class MainWindow(QMainWindow, Ui_MainWindow):
+    def __init__(self, parent=None):
+        super(MainWindow, self).__init__(parent)
+        self.setupUi(self)
 
 def main():
     qt_app = QApplication(sys.argv)
-    label = QLabel("Hello, world")
-    label.show()
+    frame = MainWindow()
+    frame.show()
     qt_app.exec_()
 
 if __name__ == "__main__":
