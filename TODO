@@ -1,0 +1,20 @@
+====
+TODO
+====
+
+* Basic simp functionality
+
+  * Copy relevant parts from imageviewer.py?
+  * Load and display a SIR
+  * Use move to move around image
+  * Display pixel details (crosshair, etc)
+  * Zoomer window
+
+* Be able to show full path to the SIR
+* Be able to add some notes to each SIR
+* Compare two SIRs together
+
+  * Crossfade between them
+  * Side-by-side: moving one moves both
+  * Clicking a pixel displays the value in both SIRs
+  * Create and show the difference SIR
