@@ -44,11 +44,30 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 "SIR files (*.sir *.ave);;Any file (*)"
                 )
         if filename != '':
-            pass # TODO: Open the file
+            self.load_sir(filename)
 
     def menu_close(self):
         """ Close file """
         print("close clicked")
+
+    def load_sir(self, fname):
+        """ Loads the SIR file and updates display """
+        self.sirdata = loadsir(fname)
+        self.update_image()
+
+    def update_image(self):
+        """ Reload the image """
+        nsx = int(self.sirdata[1][0].astype('int'))
+        nsy = int(self.sirdata[1][1].astype('int'))
+        image = QImage(nsx, nsy, QImage.Format_ARGB32)
+        for x in xrange(nsx):
+            for y in xrange(nsy):
+                pix_val = qRgba(1, 2, 3, 255)
+                image.setPixel(x, y, pix_val)
+        pixmap = QPixmap.fromImage(image)
+        #self.main_im.pixmap = pixmap
+        self.main_im.setText("Loaded")
+        # TODO: Finish here
 
 def main():
     qt_app = QApplication(sys.argv)
