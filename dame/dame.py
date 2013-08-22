@@ -28,6 +28,14 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.actionOpen.triggered.connect(self.menu_open)
         self.actionClose.triggered.connect(self.menu_close)
 
+        # Add icons to menu items (can't seem to do it in Qt Designer)
+        # http://stackoverflow.com/questions/11643221/are-there-default-icons-in-pyqt-pyside
+        QIcon.setThemeName("gnome") # TODO: temporary
+        self.actionQuit.setIcon(QIcon.fromTheme("application-exit"))
+        self.actionOpen.setIcon(QIcon.fromTheme("document-open"))
+        self.actionAbout.setIcon(QIcon.fromTheme("help-about"))
+        self.actionClose.setIcon(QIcon.fromTheme("window-close"))
+
         # Status bar
         self.statusbar.showMessage("No file loaded")
 
