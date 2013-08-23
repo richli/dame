@@ -24,6 +24,8 @@ class MainWindow(QtGui.QMainWindow):
     def __init__(self, parent=None):
         QtGui.QMainWindow.__init__(self, parent)
         self.setupUi()
+        self.panning = False # a flag if we're panning with the mouse currently
+        self.scanning = False # a flag if we're scanning pixel values with the mouse
 
     def setupUi(self):
         self.setWindowTitle("dame")
@@ -157,4 +159,27 @@ class MainWindow(QtGui.QMainWindow):
         self.imageLabel.setPixmap(pixmap)
         self.imageLabel.adjustSize()
         # TODO: Update status bar
+
+    # Mouse events
+    def mousePressEvent(self, mouse):
+        if mouse.button() == QtCore.Qt.RightButton:
+            self.panning = True
+        elif mouse.button() == QtCore.Qt.LeftButton:
+            self.scanning = True
+
+    def mouseMoveEvent(self, mouse):
+        #print("mouse moved")
+        if self.panning:
+            print("panning at {}".format(mouse.pos()))
+        elif self.scanning:
+            print("scanning pixel at {}".format(mouse.pos()))
     
+    def mouseReleaseEvent(self, mouse):
+        print("mouse released")
+        if mouse.button() == QtCore.Qt.RightButton and self.panning:
+            self.panning = False
+        if mouse.button() == QtCore.Qt.LeftButton and self.scanning:
+            self.scanning = False
+
+    # Keyboard events
+    # TODO
