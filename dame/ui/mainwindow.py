@@ -94,7 +94,7 @@ class MainWindow(QtGui.QMainWindow):
 
     def open_file(self):
         """ Display open file dialog """
-        filename, file_filter = QtGui.QFileDialog.getOpenFileName(self, 
+        filename = QtGui.QFileDialog.getOpenFileName(self, 
                 "Open SIR file", 
                 QtCore.QDir.homePath(), 
                 "SIR files (*.sir *.ave);;Any file (*)"
