@@ -1,6 +1,9 @@
 import os
 from textwrap import dedent
+
 from PyQt4 import QtCore, QtGui
+from PyQt4.QtGui import QImage, QLabel, QMessageBox, QScrollArea, QAction, QIcon, QPixmap
+
 from dame import version_string
 
 class MainWindow(QtGui.QMainWindow):
@@ -15,13 +18,13 @@ class MainWindow(QtGui.QMainWindow):
         self.create_statusbar()
         self.create_menus()
 
-        self.imageLabel = QtGui.QLabel()
+        self.imageLabel = QLabel()
         #self.imageLabel.setBackgroundRole(QtGui.QPalette.Base)
         self.imageLabel.setSizePolicy(QtGui.QSizePolicy.Ignored,
                 QtGui.QSizePolicy.Ignored)
         self.imageLabel.setScaledContents(True)
 
-        self.scrollArea = QtGui.QScrollArea()
+        self.scrollArea = QScrollArea()
         self.scrollArea.setBackgroundRole(QtGui.QPalette.Dark)
         self.scrollArea.setWidget(self.imageLabel)
 
@@ -29,41 +32,40 @@ class MainWindow(QtGui.QMainWindow):
 
     def create_statusbar(self):
         self.statusBar().showMessage("Ready")
-        self.pixinfo_label = QtGui.QLabel()
+        self.pixinfo_label = QLabel()
         self.pixinfo_label.setVisible(False)
 
         self.statusBar().addPermanentWidget(self.pixinfo_label)
 
     def create_actions(self):
-        # TODO: Add icons
-
-        self.about_action = QtGui.QAction("&About", self)
+        self.about_action = QAction("&About", self)
         self.about_action.setStatusTip("About dame")
-        self.about_action.setMenuRole(QtGui.QAction.AboutRole)
+        self.about_action.setMenuRole(QAction.AboutRole)
         self.about_action.triggered.connect(self.show_about)
 
-        self.open_action = QtGui.QAction("&Open", self)
+        self.open_action = QAction("&Open", self)
         self.open_action.setStatusTip("Open a SIR file")
         self.open_action.setShortcut(QtGui.QKeySequence.Open)
         self.open_action.triggered.connect(self.open_file)
 
-        self.close_action = QtGui.QAction("&Close", self)
+        self.close_action = QAction("&Close", self)
         self.close_action.setStatusTip("Close current SIR file")
         self.close_action.setShortcut(QtGui.QKeySequence.Close)
         self.close_action.triggered.connect(self.close_file)
 
-        self.exit_action = QtGui.QAction("E&xit", self)
-        self.about_action.setMenuRole(QtGui.QAction.QuitRole)
+        self.exit_action = QAction("E&xit", self)
+        self.about_action.setMenuRole(QAction.QuitRole)
         self.exit_action.setStatusTip("Exit dame")
         self.exit_action.setShortcut(QtGui.QKeySequence("Ctrl+Q"))
         self.exit_action.triggered.connect(self.close)
 
         # http://stackoverflow.com/questions/11643221/are-there-default-icons-in-pyqt-pyside
-        QtGui.QIcon.setThemeName("gnome") # TODO: temporary
-        self.open_action.setIcon(QtGui.QIcon.fromTheme("document-open"))
-        self.close_action.setIcon(QtGui.QIcon.fromTheme("window-close"))
-        self.exit_action.setIcon(QtGui.QIcon.fromTheme("application-exit"))
-        self.about_action.setIcon(QtGui.QIcon.fromTheme("help-about"))
+        # TODO: Add icons in a better way. See how Picard does it.
+        QIcon.setThemeName("gnome") # TODO: temporary
+        self.open_action.setIcon(QIcon.fromTheme("document-open"))
+        self.close_action.setIcon(QIcon.fromTheme("window-close"))
+        self.exit_action.setIcon(QIcon.fromTheme("application-exit"))
+        self.about_action.setIcon(QIcon.fromTheme("help-about"))
 
     def create_menus(self):
         menu = self.menuBar().addMenu("&File")
@@ -97,7 +99,7 @@ class MainWindow(QtGui.QMainWindow):
                 Dame {}
                 Copyright 2013 Richard Lindsley
                 Dame is a SIR file viewer""".format(version_string)
-        QtGui.QMessageBox.about(self, "About", dedent(about_text))
+        QMessageBox.about(self, "About", dedent(about_text))
 
     #def update_image(self):
     #    """ Reload the image """
