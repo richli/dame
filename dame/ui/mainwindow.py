@@ -106,7 +106,11 @@ class MainWindow(QtGui.QMainWindow):
 
     def close_file(self):
         """ Close file """
-        print("Close file clicked")
+        self.sirdata = None
+        self.imageLabel.setHidden(True)
+        self.imageLabel.clear()
+        self.imageLabel.adjustSize()
+        # TODO: update status bar
 
     def show_about(self):
         """ Display about popup """
