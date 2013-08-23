@@ -94,6 +94,7 @@ class MainWindow(QtGui.QMainWindow):
         menu = self.menuBar().addMenu("&Help")
         menu.addAction(self.about_action)
 
+    @QtCore.pyqtSlot()
     def open_file(self):
         """ Display open file dialog """
         filename = QtGui.QFileDialog.getOpenFileName(self, 
@@ -112,6 +113,7 @@ class MainWindow(QtGui.QMainWindow):
         else:
             print("Can't open {}".format(filename))
 
+    @QtCore.pyqtSlot()
     def close_file(self):
         """ Close file """
         self.sirdata = None
@@ -120,6 +122,7 @@ class MainWindow(QtGui.QMainWindow):
         self.imageLabel.adjustSize()
         # TODO: update status bar
 
+    @QtCore.pyqtSlot()
     def show_about(self):
         """ Display about popup """
         about_text= """
