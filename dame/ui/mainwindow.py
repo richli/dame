@@ -1,10 +1,24 @@
+from __future__ import division
+
 import os
 from textwrap import dedent
 
+import numpy as np
+import numpy.ma as ma
 from PyQt4 import QtCore, QtGui
 from PyQt4.QtGui import QImage, QLabel, QMessageBox, QScrollArea, QAction, QIcon, QPixmap
 
 from dame import version_string
+from dame.loadsir import loadsir
+
+#http://stackoverflow.com/questions/1736015/debugging-a-pyqt4-app
+def debug_trace():
+    '''Set a tracepoint in the Python debugger that works with Qt'''
+    from PyQt4.QtCore import pyqtRemoveInputHook
+    from pdb import set_trace
+    pyqtRemoveInputHook()
+    set_trace()
+
 
 class MainWindow(QtGui.QMainWindow):
     def __init__(self, parent=None):
@@ -23,6 +37,8 @@ class MainWindow(QtGui.QMainWindow):
         self.imageLabel.setSizePolicy(QtGui.QSizePolicy.Ignored,
                 QtGui.QSizePolicy.Ignored)
         self.imageLabel.setScaledContents(True)
+        self.imageLabel.adjustSize()
+        self.imageLabel.setHidden(True)
 
         self.scrollArea = QScrollArea()
         self.scrollArea.setBackgroundRole(QtGui.QPalette.Dark)
@@ -86,8 +102,7 @@ class MainWindow(QtGui.QMainWindow):
         if filename:
             print("Loading {}".format(filename))
             self.sirdata = loadsir(filename)
-            # TODO
-            #self.update_image()
+            self.update_image()
 
     def close_file(self):
         """ Close file """
@@ -101,17 +116,35 @@ class MainWindow(QtGui.QMainWindow):
                 Dame is a SIR file viewer""".format(version_string)
         QMessageBox.about(self, "About", dedent(about_text))
 
-    #def update_image(self):
-    #    """ Reload the image """
-    #    nsx = int(self.sirdata[1][0].astype('int'))
-    #    nsy = int(self.sirdata[1][1].astype('int'))
-    #    image = QImage(nsx, nsy, QImage.Format_ARGB32)
-    #    for x in xrange(nsx):
-    #        for y in xrange(nsy):
-    #            pix_val = qRgba(1, 2, 3, 255)
-    #            image.setPixel(x, y, pix_val)
-    #    pixmap = QPixmap.fromImage(image)
-        #self.main_im.pixmap = pixmap
-        #self.main_im.setText("Loaded")
-        # TODO: Finish here
+    def update_image(self):
+        """ Reload the image """
+        # TODO: Sometime I could use the C SIR library instead of the Python
+        # version
+        nsx = int(self.sirdata[1][0].astype('int'))
+        nsy = int(self.sirdata[1][1].astype('int'))
+        vmin = self.sirdata[1][49]
+        vmax = self.sirdata[1][50]
+        anodata = self.sirdata[1][48]
+        v_offset = vmax - vmin
+        v_scale = 255 / (vmax - vmin)
+        #image = QImage(nsx, nsy, QImage.Format_ARGB32)
+        image = QImage(nsx, nsy, QImage.Format_RGB32)
+        # Scale the SIR image to the range of 0,255
+        sir_scale = ma.masked_less_equal(self.sirdata[0], anodata, copy=True)
+        sir_scale += v_offset
+        sir_scale *= v_scale
+        sir_scale = sir_scale.filled(0) # all nodata values are set to 0
+        for x in xrange(nsx):
+            for y in xrange(nsy):
+                #pix_val = QtGui.qRgba(1, 2, 3, 128)
+                sir_val = sir_scale[y,x]
+                sir_val = int(round(sir_val))
+                # TODO: I could use a different colormap here
+                pix_val = QtGui.qRgb(sir_val, sir_val, sir_val)
+                image.setPixel(x, y, pix_val)
+        pixmap = QPixmap.fromImage(image)
+        self.imageLabel.setHidden(False)
+        self.imageLabel.setPixmap(pixmap)
+        self.imageLabel.adjustSize()
+        # TODO: Update status bar
     
