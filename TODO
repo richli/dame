@@ -2,18 +2,21 @@
 TODO
 ====
 
-* As a template for package layout, use picard
+* Add basic command line args (getopt, maybe not argparse?)
 * Basic simp functionality
 
-  * Copy relevant parts from imageviewer.py?
-  * Load and display a SIR
-  * Use move to move around image
+  * Use mouse to move around image
   * Display pixel details (crosshair, etc)
+  * Update status bar with pixel details
   * Zoomer window
+  * Show SIR header info (use C SIR library)
 
+* Pull in git version somehow
+* As a template for package layout, use picard
+* Create Arch PKGBUILD
 * Be able to show full path to the SIR
 * Be able to add some notes to each SIR
-* Compare two SIRs together
+* Add a mode to compare two SIRs together
 
   * Crossfade between them
   * Side-by-side: moving one moves both
