@@ -100,9 +100,15 @@ class MainWindow(QtGui.QMainWindow):
                 "SIR files (*.sir *.ave);;Any file (*)"
                 )
         if filename:
+            self.load_sir(filename)
+
+    def load_sir(self, filename):
+        if os.access(filename, os.F_OK|os.R_OK):
             print("Loading {}".format(filename))
             self.sirdata = loadsir(filename)
             self.update_image()
+        else:
+            print("Can't open {}".format(filename))
 
     def close_file(self):
         """ Close file """
