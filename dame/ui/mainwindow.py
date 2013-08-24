@@ -72,10 +72,22 @@ class MainWindow(QtGui.QMainWindow):
         self.close_action.triggered.connect(self.close_file)
 
         self.exit_action = QAction("E&xit", self)
-        self.about_action.setMenuRole(QAction.QuitRole)
+        self.exit_action.setMenuRole(QAction.QuitRole)
         self.exit_action.setStatusTip("Exit dame")
         self.exit_action.setShortcut(QtGui.QKeySequence("Ctrl+Q"))
         self.exit_action.triggered.connect(self.close)
+
+        self.prop_action = QAction("Image properties", self)
+        self.prop_action.setStatusTip("Display properties of the loaded SIR file")
+        self.prop_action.setEnabled(False)
+        # TODO: Implement
+        #self.prop_action.triggered.connect(self.close)
+
+        self.zoomer_action = QAction("Enable zoomer window", self)
+        self.zoomer_action.setStatusTip("Show zoomer window for magnified viewing")
+        self.zoomer_action.setCheckable(True)
+        # TODO: Implement
+        #self.zoomer_action.triggered.connect(self.close)
 
         # http://stackoverflow.com/questions/11643221/are-there-default-icons-in-pyqt-pyside
         # TODO: Add icons in a better way. See how Picard does it.
@@ -91,6 +103,10 @@ class MainWindow(QtGui.QMainWindow):
         menu.addAction(self.close_action)
         menu.addSeparator()
         menu.addAction(self.exit_action)
+        menu = self.menuBar().addMenu("Image")
+        menu.addAction(self.prop_action)
+        menu = self.menuBar().addMenu("Zoomer")
+        menu.addAction(self.zoomer_action)
         menu = self.menuBar().addMenu("&Help")
         menu.addAction(self.about_action)
 
