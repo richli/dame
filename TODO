@@ -4,7 +4,6 @@ TODO
 
 * Basic simp functionality
 
-  * Use right-click mouse to pan around image (in progress)
   * Update status bar with file details
   * Display pixel details (crosshair, etc)
   * Update status bar with pixel details
@@ -13,8 +12,9 @@ TODO
 
 * Add keyboard shortcuts to move crosshair (like in sirtool; simp doesn't have it)
 * Pull in git version somehow
-* As a template for package layout, use picard
 * Create Arch PKGBUILD
+* As a template for package layout, use picard
+* Add tabs for multiple files?
 * Be able to open gzipped SIR files
 * Be able to show full path to the SIR
 * Be able to add some notes to each SIR

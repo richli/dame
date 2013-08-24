@@ -20,4 +20,5 @@ Features
 Dame can:
 
 * Load a SIR image
+* Pan around the image by right-click dragging
 
