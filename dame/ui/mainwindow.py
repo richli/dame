@@ -125,8 +125,10 @@ class MainWindow(QtGui.QMainWindow):
     def load_sir(self, filename):
         if os.access(filename, os.F_OK|os.R_OK):
             logging.info("Loading {}".format(filename))
+            self.statusBar().showMessage("Loading")
             self.sirdata = loadsir(filename)
             self.update_image()
+            self.statusBar().showMessage("Loaded", 2000)
         else:
             logging.warning("Can't open {}".format(filename))
             # TODO: Alert the user via GUI
@@ -140,7 +142,7 @@ class MainWindow(QtGui.QMainWindow):
         self.imageLabel.clear()
         self.imageLabel.adjustSize()
         self.imageLabel.setCursor(QCursor(QtCore.Qt.ArrowCursor))
-        # TODO: update status bar
+        self.statusBar().showMessage("SIR closed", 2000)
 
     @QtCore.pyqtSlot()
     def show_about(self):
