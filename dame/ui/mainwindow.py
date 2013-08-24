@@ -1,6 +1,7 @@
 from __future__ import division
 
 import os
+import logging
 from textwrap import dedent
 
 import numpy as np
@@ -123,15 +124,17 @@ class MainWindow(QtGui.QMainWindow):
 
     def load_sir(self, filename):
         if os.access(filename, os.F_OK|os.R_OK):
-            print("Loading {}".format(filename))
+            logging.info("Loading {}".format(filename))
             self.sirdata = loadsir(filename)
             self.update_image()
         else:
-            print("Can't open {}".format(filename))
+            logging.warning("Can't open {}".format(filename))
+            # TODO: Alert the user via GUI
 
     @QtCore.pyqtSlot()
     def close_file(self):
         """ Close file """
+        logging.info("Closing SIR file")
         self.sirdata = None
         self.imageLabel.setHidden(True)
         self.imageLabel.clear()
@@ -150,8 +153,8 @@ class MainWindow(QtGui.QMainWindow):
 
     def update_image(self):
         """ Reload the image """
-        # TODO: Sometime I could use the C SIR library instead of the Python
-        # version
+        logging.info("Updating imageLabel")
+        # TODO: Use the C SIR library instead of the Python version
         nsx = int(self.sirdata[1][0].astype('int'))
         nsy = int(self.sirdata[1][1].astype('int'))
         vmin = self.sirdata[1][49]
