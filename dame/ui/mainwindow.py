@@ -27,6 +27,7 @@ class MainWindow(QtGui.QMainWindow):
         self.setupUi()
         self.panning = None # a flag if we're panning with the mouse currently
         self.scanning = None # a flag if we're scanning pixel values with the mouse
+        self.sir_files = {} # TODO: Use this dict to hold all the SIR files and associated info
 
     def setupUi(self):
         self.setWindowTitle("dame")
