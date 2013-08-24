@@ -6,7 +6,7 @@ from textwrap import dedent
 import numpy as np
 import numpy.ma as ma
 from PyQt4 import QtCore, QtGui
-from PyQt4.QtGui import QImage, QLabel, QMessageBox, QScrollArea, QAction, QIcon, QPixmap
+from PyQt4.QtGui import QImage, QLabel, QMessageBox, QScrollArea, QAction, QIcon, QPixmap, QCursor
 
 from dame import version_string
 from dame.loadsir import loadsir
@@ -120,6 +120,7 @@ class MainWindow(QtGui.QMainWindow):
         self.imageLabel.setHidden(True)
         self.imageLabel.clear()
         self.imageLabel.adjustSize()
+        self.imageLabel.setCursor(QCursor(QtCore.Qt.ArrowCursor))
         # TODO: update status bar
 
     @QtCore.pyqtSlot()
@@ -161,12 +162,14 @@ class MainWindow(QtGui.QMainWindow):
         self.imageLabel.setHidden(False)
         self.imageLabel.setPixmap(pixmap)
         self.imageLabel.adjustSize()
+        self.imageLabel.setCursor(QCursor(QtCore.Qt.CrossCursor))
         # TODO: Update status bar
 
     # Mouse events
     def mousePressEvent(self, mouse):
         if mouse.button() == QtCore.Qt.RightButton:
             self.panning = mouse.pos()
+            self.imageLabel.setCursor(QCursor(QtCore.Qt.ClosedHandCursor))
         elif mouse.button() == QtCore.Qt.LeftButton:
             self.scanning = mouse.pos()
             # TODO: Implement scanning. I need to draw a box around the current
@@ -188,6 +191,7 @@ class MainWindow(QtGui.QMainWindow):
         print("mouse released")
         if mouse.button() == QtCore.Qt.RightButton and self.panning:
             self.panning = None
+            self.imageLabel.setCursor(QCursor(QtCore.Qt.CrossCursor))
         if mouse.button() == QtCore.Qt.LeftButton and self.scanning:
             self.scanning = None
 
