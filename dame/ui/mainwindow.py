@@ -24,8 +24,8 @@ class MainWindow(QtGui.QMainWindow):
     def __init__(self, parent=None):
         QtGui.QMainWindow.__init__(self, parent)
         self.setupUi()
-        self.panning = False # a flag if we're panning with the mouse currently
-        self.scanning = False # a flag if we're scanning pixel values with the mouse
+        self.panning = None # a flag if we're panning with the mouse currently
+        self.scanning = None # a flag if we're scanning pixel values with the mouse
 
     def setupUi(self):
         self.setWindowTitle("dame")
@@ -166,23 +166,30 @@ class MainWindow(QtGui.QMainWindow):
     # Mouse events
     def mousePressEvent(self, mouse):
         if mouse.button() == QtCore.Qt.RightButton:
-            self.panning = True
+            self.panning = mouse.pos()
         elif mouse.button() == QtCore.Qt.LeftButton:
-            self.scanning = True
+            self.scanning = mouse.pos()
+            # TODO: Implement scanning. I need to draw a box around the current
+            # position that represents the zoomer window size/position
 
     def mouseMoveEvent(self, mouse):
-        #print("mouse moved")
         if self.panning:
-            print("panning at {}".format(mouse.pos()))
+            dx = self.panning.x() - mouse.pos().x()
+            dy = self.panning.y() - mouse.pos().y()
+            hbar = self.scrollArea.horizontalScrollBar()
+            vbar = self.scrollArea.verticalScrollBar()
+            hbar.setValue(hbar.value()+dx)
+            vbar.setValue(vbar.value()+dy)
+            self.panning = mouse.pos()
         elif self.scanning:
             print("scanning pixel at {}".format(mouse.pos()))
     
     def mouseReleaseEvent(self, mouse):
         print("mouse released")
         if mouse.button() == QtCore.Qt.RightButton and self.panning:
-            self.panning = False
+            self.panning = None
         if mouse.button() == QtCore.Qt.LeftButton and self.scanning:
-            self.scanning = False
+            self.scanning = None
 
     # Keyboard events
     # TODO
