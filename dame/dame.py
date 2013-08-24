@@ -24,8 +24,7 @@ from loadsir import loadsir
 
 def main():
     parser = argparse.ArgumentParser(description="View SIR file(s)")
-    #parser.add_argument("sir_files", action="store", nargs='*',
-    parser.add_argument("sir_files", action="store", nargs=1,
+    parser.add_argument("sir_files", action="store", nargs='*',
             help='List of SIR files to open')
     parser.add_argument('--version', action='version',
             version='%(prog)s version {}'.format(__version__))
