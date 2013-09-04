@@ -11,6 +11,7 @@ from PyQt4.QtGui import QImage, QLabel, QMessageBox, QScrollArea, QAction, QIcon
 
 from dame import version_string
 from dame.loadsir import loadsir
+from dame.pix2latlon import pix2latlon
 
 #http://stackoverflow.com/questions/1736015/debugging-a-pyqt4-app
 def debug_trace():
@@ -52,10 +53,14 @@ class MainWindow(QtGui.QMainWindow):
 
     def create_statusbar(self):
         self.statusBar().showMessage("Ready")
+
         self.pixinfo_label = QLabel()
         self.pixinfo_label.setVisible(False)
+        self.status_coord_label = QLabel()
+        self.status_coord_label.setVisible(True)
 
-        self.statusBar().addPermanentWidget(self.pixinfo_label)
+        self.statusBar().addWidget(self.pixinfo_label)
+        self.statusBar().addWidget(self.status_coord_label)
 
     def create_actions(self):
         self.about_action = QAction("&About", self)
@@ -127,7 +132,11 @@ class MainWindow(QtGui.QMainWindow):
         if os.access(filename, os.F_OK|os.R_OK):
             logging.info("Loading {}".format(filename))
             self.statusBar().showMessage("Loading")
-            self.sirdata = loadsir(filename)
+            sirdata = loadsir(filename)
+            self.sir_files[0] = {
+                    'filename': filename, 
+                    'data': sirdata[0],
+                    'header': sirdata[1]}
             self.update_image()
             self.statusBar().showMessage("Loaded", 2000)
         else:
@@ -138,11 +147,13 @@ class MainWindow(QtGui.QMainWindow):
     def close_file(self):
         """ Close file """
         logging.info("Closing SIR file")
-        self.sirdata = None
+        del self.sir_files[0]
         self.imageLabel.setHidden(True)
         self.imageLabel.clear()
         self.imageLabel.adjustSize()
         self.imageLabel.setCursor(QCursor(QtCore.Qt.ArrowCursor))
+        self.pixinfo_label.setVisible(False)
+        self.status_coord_label.setVisible(False)
         self.statusBar().showMessage("SIR closed", 2000)
 
     @QtCore.pyqtSlot()
@@ -158,17 +169,19 @@ class MainWindow(QtGui.QMainWindow):
         """ Reload the image """
         logging.info("Updating imageLabel")
         # TODO: Use the C SIR library instead of the Python version
-        nsx = int(self.sirdata[1][0].astype('int'))
-        nsy = int(self.sirdata[1][1].astype('int'))
-        vmin = self.sirdata[1][49]
-        vmax = self.sirdata[1][50]
-        anodata = self.sirdata[1][48]
+        header = self.sir_files[0]['header']
+        sirdata = self.sir_files[0]['data']
+        nsx = int(header[0].astype('int'))
+        nsy = int(header[1].astype('int'))
+        vmin = header[49]
+        vmax = header[50]
+        anodata = header[48]
         v_offset = vmax - vmin
         v_scale = 255 / (vmax - vmin)
         #image = QImage(nsx, nsy, QImage.Format_ARGB32)
         image = QImage(nsx, nsy, QImage.Format_RGB32)
         # Scale the SIR image to the range of 0,255
-        sir_scale = ma.masked_less_equal(self.sirdata[0], anodata, copy=True)
+        sir_scale = ma.masked_less_equal(sirdata, anodata, copy=True)
         sir_scale += v_offset
         sir_scale *= v_scale
         sir_scale = sir_scale.filled(0) # all nodata values are set to 0
@@ -185,7 +198,29 @@ class MainWindow(QtGui.QMainWindow):
         self.imageLabel.setPixmap(pixmap)
         self.imageLabel.adjustSize()
         self.imageLabel.setCursor(QCursor(QtCore.Qt.CrossCursor))
-        # TODO: Update status bar
+        self.update_statusbar()
+
+    def update_statusbar(self):
+        vmin = self.sir_files[0]['header'][49]
+        vmax = self.sir_files[0]['header'][50]
+        self.pixinfo_label.setVisible(True)
+        self.pixinfo_label.setText("{}, min: {}, max: {}".format(
+            self.sir_files[0]['filename'],
+            vmin, vmax))
+        self.status_coord_label.setVisible(False)
+
+    def update_statusbar_pos(self, x, y):
+        """ Update with position at image index x, y """
+        self.statusBar().clearMessage()
+        self.status_coord_label.setVisible(True)
+        nsx = int(self.sir_files[0]['header'][0].astype('int'))
+        nsy = int(self.sir_files[0]['header'][1].astype('int'))
+        # NOTE: 0-based indexing!
+        if x >= 0 and y >= 0 and x < nsx and y < nsy:
+            lon, lat = pix2latlon(x, y, self.sir_files[0]['header'])
+            stat_text = "x:{}, y:{}, lat:{:0.4f}, lon:{:0.4f}, value:{}".format(
+                    x, y, lat, lon, self.sir_files[0]['data'][y, x])
+            self.status_coord_label.setText(stat_text)
 
     # Mouse events
     def mousePressEvent(self, mouse):
@@ -196,6 +231,9 @@ class MainWindow(QtGui.QMainWindow):
             self.scanning = mouse.pos()
             # TODO: Implement scanning. I need to draw a box around the current
             # position that represents the zoomer window size/position
+            # Update status bar
+            im_pos = self.imageLabel.mapFromGlobal(self.mapToGlobal(mouse.pos()))
+            self.update_statusbar_pos(im_pos.x(), im_pos.y())
 
     def mouseMoveEvent(self, mouse):
         if self.panning:
@@ -207,10 +245,11 @@ class MainWindow(QtGui.QMainWindow):
             vbar.setValue(vbar.value()+dy)
             self.panning = mouse.pos()
         elif self.scanning:
-            print("scanning pixel at {}".format(mouse.pos()))
+            # Switch mouse position coord from QMainWindow to self.imagelabel (QLabel)
+            im_pos = self.imageLabel.mapFromGlobal(self.mapToGlobal(mouse.pos()))
+            self.update_statusbar_pos(im_pos.x(), im_pos.y())
     
     def mouseReleaseEvent(self, mouse):
-        print("mouse released")
         if mouse.button() == QtCore.Qt.RightButton and self.panning:
             self.panning = None
             self.imageLabel.setCursor(QCursor(QtCore.Qt.CrossCursor))
