@@ -4,8 +4,12 @@ TODO
 
 * Basic simp functionality
 
+  * Draw zoomer window box on main image (in progress)
   * Zoomer window
-  * Show SIR header info (use C SIR library)
+  * Use C SIR library to load SIR
+  * Use C SIR library to convert x/y coords to lat/lon
+  * Use C SIR library to print sir header
+  * Show SIR header info in dialog box (menu item)
 
 * Pull in git version somehow
 * Add keyboard shortcuts to move crosshair (like in sirtool; simp doesn't have it)

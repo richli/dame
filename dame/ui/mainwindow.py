@@ -199,6 +199,17 @@ class MainWindow(QtGui.QMainWindow):
         self.imageLabel.adjustSize()
         self.imageLabel.setCursor(QCursor(QtCore.Qt.CrossCursor))
         self.update_statusbar()
+        self.sir_files[0]['pixmap'] = pixmap
+
+    def draw_zoomer_rect(self):
+        """ Draw the rect on the image where the zoomer window location is """
+        pixmap = self.sir_files[0]['pixmap'].copy()
+        loc = self.sir_files[0]['pix_loc']
+        p = QtGui.QPainter()
+        p.begin(pixmap)
+        p.drawText(loc.x(), loc.y(), "Hi there") # TODO: Replace with the zoomer box
+        p.end()
+        self.imageLabel.setPixmap(pixmap)
 
     def update_statusbar(self):
         vmin = self.sir_files[0]['header'][49]
@@ -229,11 +240,12 @@ class MainWindow(QtGui.QMainWindow):
             self.imageLabel.setCursor(QCursor(QtCore.Qt.ClosedHandCursor))
         elif mouse.button() == QtCore.Qt.LeftButton:
             self.scanning = mouse.pos()
-            # TODO: Implement scanning. I need to draw a box around the current
-            # position that represents the zoomer window size/position
             # Update status bar
             im_pos = self.imageLabel.mapFromGlobal(self.mapToGlobal(mouse.pos()))
             self.update_statusbar_pos(im_pos.x(), im_pos.y())
+            # Draw zoomer rect
+            self.sir_files[0]['pix_loc'] = im_pos
+            self.draw_zoomer_rect()
 
     def mouseMoveEvent(self, mouse):
         if self.panning:
@@ -248,6 +260,9 @@ class MainWindow(QtGui.QMainWindow):
             # Switch mouse position coord from QMainWindow to self.imagelabel (QLabel)
             im_pos = self.imageLabel.mapFromGlobal(self.mapToGlobal(mouse.pos()))
             self.update_statusbar_pos(im_pos.x(), im_pos.y())
+            # Draw zoomer rect
+            self.sir_files[0]['pix_loc'] = im_pos
+            self.draw_zoomer_rect()
     
     def mouseReleaseEvent(self, mouse):
         if mouse.button() == QtCore.Qt.RightButton and self.panning:
