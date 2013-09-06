@@ -93,8 +93,54 @@ class MainWindow(QtGui.QMainWindow):
         self.zoomer_action = QAction("Enable zoomer window", self)
         self.zoomer_action.setStatusTip("Show zoomer window for magnified viewing")
         self.zoomer_action.setCheckable(True)
-        # TODO: Implement
-        #self.zoomer_action.triggered.connect(self.close)
+        self.zoomer_action.triggered.connect(self.update_zoomer_opts)
+
+        self.zoom_factor_label_action = QAction("Zoom factor", self)
+        self.zoom_factor_label_action.setEnabled(False)
+
+        self.zoom_factor_1_action = QAction("2x zoom", self)
+        self.zoom_factor_2_action = QAction("4x zoom", self)
+        self.zoom_factor_3_action = QAction("8x zoom", self)
+        self.zoom_factor_4_action = QAction("16x zoom", self)
+        self.zoom_factor_1_action.setStatusTip("Magnify zoom region by 2x")
+        self.zoom_factor_2_action.setStatusTip("Magnify zoom region by 4x")
+        self.zoom_factor_3_action.setStatusTip("Magnify zoom region by 8x")
+        self.zoom_factor_4_action.setStatusTip("Magnify zoom region by 16x")
+        self.zoom_factor_1_action.setCheckable(True)
+        self.zoom_factor_2_action.setCheckable(True)
+        self.zoom_factor_3_action.setCheckable(True)
+        self.zoom_factor_4_action.setCheckable(True)
+
+        self.zoom_size_label_action = QAction("Zoom region size", self)
+        self.zoom_size_label_action.setEnabled(False)
+
+        self.zoom_size_1_action = QAction("9x9 window", self)
+        self.zoom_size_2_action = QAction("17x17 window", self)
+        self.zoom_size_3_action = QAction("29x29 window", self)
+        self.zoom_size_4_action = QAction("45x45 window", self)
+        self.zoom_size_1_action.setStatusTip("Set zoom region to 9x9 pixels")
+        self.zoom_size_2_action.setStatusTip("Set zoom region to 17x17 pixels")
+        self.zoom_size_3_action.setStatusTip("Set zoom region to 29x29 pixels")
+        self.zoom_size_4_action.setStatusTip("Set zoom region to 45x45 pixels")
+        self.zoom_size_1_action.setCheckable(True)
+        self.zoom_size_2_action.setCheckable(True)
+        self.zoom_size_3_action.setCheckable(True)
+        self.zoom_size_4_action.setCheckable(True)
+
+        # Group zoomer actions and connect slots
+        self.zoom_factor_group = QtGui.QActionGroup(self)
+        self.zoom_factor_group.addAction(self.zoom_factor_1_action)
+        self.zoom_factor_group.addAction(self.zoom_factor_2_action)
+        self.zoom_factor_group.addAction(self.zoom_factor_3_action)
+        self.zoom_factor_group.addAction(self.zoom_factor_4_action)
+        self.zoom_factor_group.triggered.connect(self.update_zoomer_opts)
+
+        self.zoom_size_group = QtGui.QActionGroup(self)
+        self.zoom_size_group.addAction(self.zoom_size_1_action)
+        self.zoom_size_group.addAction(self.zoom_size_2_action)
+        self.zoom_size_group.addAction(self.zoom_size_3_action)
+        self.zoom_size_group.addAction(self.zoom_size_4_action)
+        self.zoom_size_group.triggered.connect(self.update_zoomer_opts)
 
         # http://stackoverflow.com/questions/11643221/are-there-default-icons-in-pyqt-pyside
         # TODO: Add icons in a better way. See how Picard does it.
@@ -114,6 +160,18 @@ class MainWindow(QtGui.QMainWindow):
         menu.addAction(self.prop_action)
         menu = self.menuBar().addMenu("Zoomer")
         menu.addAction(self.zoomer_action)
+        menu.addSeparator()
+        menu.addAction(self.zoom_factor_label_action)
+        menu.addAction(self.zoom_factor_1_action)
+        menu.addAction(self.zoom_factor_2_action)
+        menu.addAction(self.zoom_factor_3_action)
+        menu.addAction(self.zoom_factor_4_action)
+        menu.addSeparator()
+        menu.addAction(self.zoom_size_label_action)
+        menu.addAction(self.zoom_size_1_action)
+        menu.addAction(self.zoom_size_2_action)
+        menu.addAction(self.zoom_size_3_action)
+        menu.addAction(self.zoom_size_4_action)
         menu = self.menuBar().addMenu("&Help")
         menu.addAction(self.about_action)
 
@@ -139,6 +197,11 @@ class MainWindow(QtGui.QMainWindow):
                     'header': sirdata[1]}
             self.update_image()
             self.statusBar().showMessage("Loaded", 2000)
+
+            # Set zoomer options
+            self.zoom_factor_2_action.setChecked(True)
+            self.zoom_size_2_action.setChecked(True)
+            self.update_zoomer_opts(draw_win=False)
         else:
             logging.warning("Can't open {}".format(filename))
             # TODO: Alert the user via GUI
@@ -203,11 +266,15 @@ class MainWindow(QtGui.QMainWindow):
 
     def draw_zoomer_rect(self):
         """ Draw the rect on the image where the zoomer window location is """
-        pixmap = self.sir_files[0]['pixmap'].copy()
         loc = self.sir_files[0]['pix_loc']
+        pixmap = self.sir_files[0]['pixmap'].copy()
+        rect_w = self.sir_files[0]['zoomer_size']
+        rect_cen_x = loc.x() - rect_w/2
+        rect_cen_y = loc.y() - rect_w/2
         p = QtGui.QPainter()
         p.begin(pixmap)
-        p.drawText(loc.x(), loc.y(), "Hi there") # TODO: Replace with the zoomer box
+        p.setPen(QtGui.QColor("#FFFFFF")) # White stroke
+        p.drawRect(rect_cen_x, rect_cen_y, rect_w, rect_w)
         p.end()
         self.imageLabel.setPixmap(pixmap)
 
@@ -232,6 +299,42 @@ class MainWindow(QtGui.QMainWindow):
             stat_text = "x:{}, y:{}, lat:{:0.4f}, lon:{:0.4f}, value:{}".format(
                     x, y, lat, lon, self.sir_files[0]['data'][y, x])
             self.status_coord_label.setText(stat_text)
+
+    # Menu events
+    @QtCore.pyqtSlot()
+    def update_zoomer_opts(self, draw_win=True):
+        """ Given a menu change, this sets zoomer options and updates """
+        # Is zoomer enabled?
+        self.sir_files[0]['zoomer_on'] = self.zoomer_action.isChecked()
+
+        # Find the zoom factor
+        zfactor = self.zoom_factor_group.checkedAction()
+        if zfactor is self.zoom_factor_1_action:
+            self.sir_files[0]['zoomer_factor'] = 2
+        elif zfactor is self.zoom_factor_2_action:
+            self.sir_files[0]['zoomer_factor'] = 4
+        elif zfactor is self.zoom_factor_3_action:
+            self.sir_files[0]['zoomer_factor'] = 8
+        elif zfactor is self.zoom_factor_4_action:
+            self.sir_files[0]['zoomer_factor'] = 16
+
+        # Find the zoom size
+        zsize = self.zoom_size_group.checkedAction()
+        if zsize is self.zoom_size_1_action:
+            self.sir_files[0]['zoomer_size'] = 9
+        elif zsize is self.zoom_size_2_action:
+            self.sir_files[0]['zoomer_size'] = 17
+        elif zsize is self.zoom_size_3_action:
+            self.sir_files[0]['zoomer_size'] = 29
+        elif zsize is self.zoom_size_4_action:
+            self.sir_files[0]['zoomer_size'] = 45
+
+        if draw_win:
+            # TODO: Update zoomer window
+
+            # Update zoomer rect
+            self.draw_zoomer_rect()
+
 
     # Mouse events
     def mousePressEvent(self, mouse):
