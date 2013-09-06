@@ -9,9 +9,9 @@ import numpy.ma as ma
 from PyQt4 import QtCore, QtGui
 from PyQt4.QtGui import QImage, QLabel, QMessageBox, QScrollArea, QAction, QIcon, QPixmap, QCursor
 
-from dame import version_string
-from dame.loadsir import loadsir
-from dame.pix2latlon import pix2latlon
+from . import version_string
+from .loadsir import loadsir
+from .pix2latlon import pix2latlon
 
 #http://stackoverflow.com/questions/1736015/debugging-a-pyqt4-app
 def debug_trace():

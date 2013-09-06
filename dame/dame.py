@@ -15,7 +15,7 @@ sip.setapi('QVariant', 2)
 from PyQt4 import QtCore,QtGui
 
 from . import __version__
-from .ui.mainwindow import MainWindow
+from .mainwindow import MainWindow
 from loadsir import loadsir
 
 #class Dame(QtGui.QApplication):
