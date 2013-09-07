@@ -10,16 +10,17 @@ TODO
   * Use C SIR library to print sir header
   * Show SIR header info in dialog box (menu item)
 
-* Add keyboard shortcuts to move crosshair (like in sirtool; simp doesn't have it)
 * Create Arch PKGBUILD
-* As a template for package layout, use picard
-* Window icon: make a high heel or something
-* Add tabs for multiple files?
-* Be able to open gzipped SIR files
-* Be able to add some notes to each SIR
+* Add keyboard shortcuts to move crosshair (like in sirtool; simp doesn't have it)
+* Be able to change display range
+* Be able to add some notes to each SIR (use QDockWidget)
 * Add a mode to compare two SIRs together
 
   * Crossfade between them
   * Side-by-side: moving one moves both
   * Clicking a pixel displays the value in both SIRs
   * Create and show the difference SIR
+
+* Window icon: make a high heel or something ladylike
+* Add tabs for multiple files
+* Be able to open gzipped SIR files
