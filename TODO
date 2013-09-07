@@ -4,7 +4,7 @@ TODO
 
 * Basic simp functionality
 
-  * Zoomer window
+  * Zoomer window (in progress)
   * Use C SIR library to load SIR
   * Use C SIR library to convert x/y coords to lat/lon
   * Use C SIR library to print sir header

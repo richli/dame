@@ -38,6 +38,7 @@ class MainWindow(QtGui.QMainWindow):
         self.create_statusbar()
         self.create_menus()
 
+        # Setup main image
         self.imageLabel = QLabel()
         #self.imageLabel.setBackgroundRole(QtGui.QPalette.Base)
         self.imageLabel.setSizePolicy(QtGui.QSizePolicy.Ignored,
@@ -51,6 +52,16 @@ class MainWindow(QtGui.QMainWindow):
         self.scrollArea.setWidget(self.imageLabel)
 
         self.setCentralWidget(self.scrollArea)
+
+        # Create popup windows (for zoomer and panner)
+        self.zoom_win = QtGui.QWidget(self, Qt.Window | Qt.Tool)
+        #self.zoom_win_im = QLabel()
+        #self.zoom_win.resize(150,150)
+        #self.zoom_win.show()
+        #self.zoom_win.setWidget(self.zoom_win_im)
+
+        #TODO: panner
+
 
     def create_statusbar(self):
         self.statusBar().showMessage("Ready")
@@ -267,17 +278,20 @@ class MainWindow(QtGui.QMainWindow):
 
     def draw_zoomer_rect(self):
         """ Draw the rect on the image where the zoomer window location is """
-        loc = self.sir_files[0]['pix_loc']
-        pixmap = self.sir_files[0]['pixmap'].copy()
-        rect_w = self.sir_files[0]['zoomer_size']
-        rect_cen_x = loc.x() - rect_w/2
-        rect_cen_y = loc.y() - rect_w/2
-        p = QtGui.QPainter()
-        p.begin(pixmap)
-        p.setPen(QtGui.QColor("#FFFFFF")) # White stroke
-        p.drawRect(rect_cen_x, rect_cen_y, rect_w, rect_w)
-        p.end()
-        self.imageLabel.setPixmap(pixmap)
+        try:
+            loc = self.sir_files[0]['pix_loc']
+            pixmap = self.sir_files[0]['pixmap'].copy()
+            rect_w = self.sir_files[0]['zoomer_size']
+            rect_cen_x = loc.x() - rect_w/2
+            rect_cen_y = loc.y() - rect_w/2
+            p = QtGui.QPainter()
+            p.begin(pixmap)
+            p.setPen(QtGui.QColor("#FFFFFF")) # White stroke
+            p.drawRect(rect_cen_x, rect_cen_y, rect_w, rect_w)
+            p.end()
+            self.imageLabel.setPixmap(pixmap)
+        except KeyError as err:
+            logging.warning("Can't find {}".format(err))
 
     def update_statusbar(self):
         vmin = self.sir_files[0]['header'][49]
@@ -331,6 +345,13 @@ class MainWindow(QtGui.QMainWindow):
             self.sir_files[0]['zoomer_size'] = 45
 
         if draw_win:
+            # Compute zoomer window size and show/hide it
+            winsize = self.sir_files[0]['zoomer_size'] * self.sir_files[0]['zoomer_factor']
+            self.zoom_win.resize(winsize, winsize)
+            if self.sir_files[0]['zoomer_on']:
+                self.zoom_win.show()
+            else:
+                self.zoom_win.hide()
             # TODO: Update zoomer window
 
             # Update zoomer rect
