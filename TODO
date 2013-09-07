@@ -10,7 +10,6 @@ TODO
   * Use C SIR library to print sir header
   * Show SIR header info in dialog box (menu item)
 
-* Pull in git version somehow
 * Add keyboard shortcuts to move crosshair (like in sirtool; simp doesn't have it)
 * Create Arch PKGBUILD
 * As a template for package layout, use picard

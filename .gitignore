@@ -2,3 +2,5 @@
 .*.sw?
 # byte-compiled python files
 *.pyc
+# This is written by setup.py
+dame/version.py
