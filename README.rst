@@ -19,9 +19,10 @@ Features
 
 Dame can:
 
-* Load a SIR image
+* Load a SIR image (using the C SIR library)
 * Pan around the image by right-click dragging
 * Display information about the currently selected pixel
+* Display the pretty-printed SIR header
 
 Installation
 ============
