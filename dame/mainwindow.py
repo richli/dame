@@ -11,8 +11,7 @@ from PyQt4.QtGui import QImage, QLabel, QMessageBox, QScrollArea, QAction, QIcon
 from PyQt4.QtCore import Qt
 
 from . import version_string
-from .loadsir import loadsir
-from .pix2latlon import pix2latlon
+import libsir
 
 #http://stackoverflow.com/questions/1736015/debugging-a-pyqt4-app
 def debug_trace():
@@ -202,11 +201,11 @@ class MainWindow(QtGui.QMainWindow):
         if os.access(filename, os.F_OK|os.R_OK):
             logging.info("Loading {}".format(filename))
             self.statusBar().showMessage("Loading")
-            sirdata = loadsir(filename)
+            sir_head, sir_data = libsir.get_sir(filename)
             self.sir_files[0] = {
                     'filename': filename, 
-                    'data': sirdata[0],
-                    'header': sirdata[1]}
+                    'data': sir_data,
+                    'header': sir_head}
             self.update_image()
             self.statusBar().showMessage("Loaded", 2000)
 
@@ -243,14 +242,13 @@ class MainWindow(QtGui.QMainWindow):
     def update_image(self):
         """ Reload the image """
         logging.info("Updating imageLabel")
-        # TODO: Use the C SIR library instead of the Python version
         header = self.sir_files[0]['header']
         sirdata = self.sir_files[0]['data']
-        nsx = int(header[0].astype('int'))
-        nsy = int(header[1].astype('int'))
-        vmin = header[49]
-        vmax = header[50]
-        anodata = header[48]
+        nsx = header.nsx
+        nsy = header.nsy
+        vmin = header.v_min
+        vmax = header.v_max
+        anodata = header.anodata
         v_offset = vmax - vmin
         v_scale = 255 / (vmax - vmin)
         #image = QImage(nsx, nsy, QImage.Format_ARGB32)
@@ -294,25 +292,28 @@ class MainWindow(QtGui.QMainWindow):
             logging.warning("Can't find {}".format(err))
 
     def update_statusbar(self):
-        vmin = self.sir_files[0]['header'][49]
-        vmax = self.sir_files[0]['header'][50]
+        vmin = self.sir_files[0]['header'].v_min
+        vmax = self.sir_files[0]['header'].v_max
         self.pixinfo_label.setVisible(True)
         self.pixinfo_label.setText("{}, min: {}, max: {}".format(
             self.sir_files[0]['filename'],
             vmin, vmax))
         self.status_coord_label.setVisible(False)
 
-    def update_statusbar_pos(self, x, y):
+    def update_statusbar_pos(self, x_im, y_im):
         """ Update with position at image index x, y """
         self.statusBar().clearMessage()
         self.status_coord_label.setVisible(True)
-        nsx = int(self.sir_files[0]['header'][0].astype('int'))
-        nsy = int(self.sir_files[0]['header'][1].astype('int'))
-        # NOTE: 0-based indexing!
-        if x >= 0 and y >= 0 and x < nsx and y < nsy:
-            lon, lat = pix2latlon(x, y, self.sir_files[0]['header'])
-            stat_text = "x:{}, y:{}, lat:{:0.4f}, lon:{:0.4f}, value:{}".format(
-                    x, y, lat, lon, self.sir_files[0]['data'][y, x])
+        nsx = self.sir_files[0]['header'].nsx
+        nsy = self.sir_files[0]['header'].nsy
+        # Convert from 0-based to 1-based indexing
+        y = nsy - y_im + 1 # Convert image y coord to SIR y coord
+        x =  x_im + 1
+        if x > 0 and y > 0 and x <= nsx and y <= nsy:
+            lon, lat = libsir.pix2latlon(x, y, self.sir_files[0]['header'])
+            # Note that sir_data is 0-based indexing, but pix2latlon is 1-based
+            stat_text = "x = {}, y = {}, lat = {:0.4f}, lon = {:0.4f}, value = {:0.4f}".format(
+                    x, y, lat, lon, self.sir_files[0]['data'][y-1, x-1])
             self.status_coord_label.setText(stat_text)
 
     # Menu events
