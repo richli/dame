@@ -99,6 +99,11 @@ class MainWindow(QtGui.QMainWindow):
         self.prop_action.setStatusTip("Display SIR header information")
         self.prop_action.triggered.connect(self.print_header)
 
+        self.range_action = QAction("Image range", self)
+        self.range_action.setStatusTip("Set image display range")
+        self.range_action.setEnabled(False)
+        #self.range_action.triggered.connect(self.print_header)
+
         self.zoomer_action = QAction("Enable zoomer window", self)
         self.zoomer_action.setStatusTip("Show zoomer window for magnified viewing")
         self.zoomer_action.setCheckable(True)
@@ -167,6 +172,7 @@ class MainWindow(QtGui.QMainWindow):
         menu.addAction(self.exit_action)
         menu = self.menuBar().addMenu("Image")
         menu.addAction(self.prop_action)
+        menu.addAction(self.range_action)
         menu = self.menuBar().addMenu("Zoomer")
         menu.addAction(self.zoomer_action)
         menu.addSeparator()
