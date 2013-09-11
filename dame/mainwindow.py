@@ -95,11 +95,9 @@ class MainWindow(QtGui.QMainWindow):
         self.exit_action.setShortcut(QtGui.QKeySequence("Ctrl+Q"))
         self.exit_action.triggered.connect(self.close)
 
-        self.prop_action = QAction("Image properties", self)
-        self.prop_action.setStatusTip("Display properties of the loaded SIR file")
-        self.prop_action.setEnabled(False)
-        # TODO: Implement
-        #self.prop_action.triggered.connect(self.close)
+        self.prop_action = QAction("SIR header", self)
+        self.prop_action.setStatusTip("Display SIR header information")
+        self.prop_action.triggered.connect(self.print_header)
 
         self.zoomer_action = QAction("Enable zoomer window", self)
         self.zoomer_action.setStatusTip("Show zoomer window for magnified viewing")
@@ -238,6 +236,12 @@ class MainWindow(QtGui.QMainWindow):
                 Copyright 2013 Richard Lindsley
                 Dame is a SIR file viewer""".format(version_string)
         QMessageBox.about(self, "About", dedent(about_text))
+
+    @QtCore.pyqtSlot()
+    def print_header(self):
+        """ Display SIR header info """
+        sir_head = libsir.print_sir_head(self.sir_files[0]['header'])
+        print(sir_head)
 
     def update_image(self):
         """ Reload the image """

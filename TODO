@@ -5,7 +5,6 @@ TODO
 * Basic simp functionality
 
   * Zoomer window (in progress)
-  * Use C SIR library to print sir header
   * Show SIR header info in dialog box (menu item)
 
 * Ensure lat/lon/value and coord indexing agrees with simp and sirtool
