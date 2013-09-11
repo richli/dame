@@ -70,8 +70,8 @@ class MainWindow(QtGui.QMainWindow):
         self.status_coord_label = QLabel()
         self.status_coord_label.setVisible(True)
 
-        self.statusBar().addWidget(self.pixinfo_label)
         self.statusBar().addWidget(self.status_coord_label)
+        self.statusBar().addWidget(self.pixinfo_label)
 
     def create_actions(self):
         self.about_action = QAction("&About", self)
