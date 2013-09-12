@@ -54,10 +54,15 @@ class MainWindow(QtGui.QMainWindow):
 
         # Create popup windows (for zoomer and panner)
         self.zoom_win = QtGui.QWidget(self, Qt.Window | Qt.Tool)
-        #self.zoom_win_im = QLabel()
+        self.zoom_win_im = QLabel()
+        self.zoom_win_im.setSizePolicy(QtGui.QSizePolicy.Ignored,
+                QtGui.QSizePolicy.Ignored)
         #self.zoom_win.resize(150,150)
         #self.zoom_win.show()
-        #self.zoom_win.setWidget(self.zoom_win_im)
+        zoomer_layout = QtGui.QGridLayout()
+        zoomer_layout.setContentsMargins(0,0,0,0)
+        zoomer_layout.addWidget(self.zoom_win_im)
+        self.zoom_win.setLayout(zoomer_layout)
 
         #TODO: panner
 
@@ -284,26 +289,54 @@ class MainWindow(QtGui.QMainWindow):
         self.update_statusbar()
         self.sir_files[0]['pixmap'] = pixmap
 
-    def draw_zoomer_rect(self):
-        """ Draw the rect on the image where the zoomer window location is """
+    def update_zoomer(self):
+        """ Update the zoomer, both the image as well as the popup """
         try:
             loc = self.sir_files[0]['pix_loc']
             pixmap = self.sir_files[0]['pixmap'].copy()
             rect_w = self.sir_files[0]['zoomer_size']
-            rect_cen_x = loc.x() - rect_w/2
-            rect_cen_y = loc.y() - rect_w/2
+            winsize = rect_w * self.sir_files[0]['zoomer_factor']
+            # Upper left corner
+            if loc.x() < rect_w/2: 
+                rect_x = 0
+            elif loc.x() > pixmap.width() - rect_w/2:
+                rect_x = pixmap.width() - rect_w
+            else:
+                rect_x = loc.x() - rect_w/2
+            if loc.y() < rect_w/2: 
+                rect_y = 0
+            elif loc.y() > pixmap.height() - rect_w/2:
+                rect_y = pixmap.height() - rect_w
+            else:
+                rect_y = loc.y() - rect_w/2
+
+            # Draw the image with the zoomer region outlined
             p = QtGui.QPainter()
             p.begin(pixmap)
             p.setPen(QtGui.QColor("#FFFFFF")) # White stroke
-            p.drawRect(rect_cen_x, rect_cen_y, rect_w, rect_w)
+            p.drawRect(rect_x, rect_y, rect_w, rect_w)
             p.end()
             self.imageLabel.setPixmap(pixmap)
+
+            # Update the zoomer window
+            # extract the zoomer region
+            pixmap = self.sir_files[0]['pixmap'].copy(rect_x, rect_y,
+                    rect_w, rect_w)
+            # scale it
+            pixmap = pixmap.scaled(winsize, winsize,
+                    Qt.KeepAspectRatioByExpanding)
+            # TODO: Add crosshair to zoomer window; note that the crosshair
+            # won't be centered if the region is at the edges
+            self.zoom_win_im.setHidden(False)
+            self.zoom_win_im.setPixmap(pixmap)
+            self.zoom_win_im.adjustSize()
         except KeyError as err:
             logging.warning("Can't find {}".format(err))
 
     def update_statusbar(self):
-        vmin = self.sir_files[0]['header'].v_min
-        vmax = self.sir_files[0]['header'].v_max
+        header = self.sir_files[0]['header']
+        vmin = header.v_min
+        vmax = header.v_max
         self.pixinfo_label.setVisible(True)
         self.pixinfo_label.setText("{}, min: {}, max: {}".format(
             self.sir_files[0]['filename'],
@@ -363,11 +396,9 @@ class MainWindow(QtGui.QMainWindow):
                 self.zoom_win.show()
             else:
                 self.zoom_win.hide()
-            # TODO: Update zoomer window
 
-            # Update zoomer rect
-            self.draw_zoomer_rect()
-
+            # Update zoomer
+            self.update_zoomer()
 
     # Mouse events
     def mousePressEvent(self, mouse):
@@ -379,9 +410,9 @@ class MainWindow(QtGui.QMainWindow):
             # Update status bar
             im_pos = self.imageLabel.mapFromGlobal(self.mapToGlobal(mouse.pos()))
             self.update_statusbar_pos(im_pos.x(), im_pos.y())
-            # Draw zoomer rect
+            # Update zoomer
             self.sir_files[0]['pix_loc'] = im_pos
-            self.draw_zoomer_rect()
+            self.update_zoomer()
 
     def mouseMoveEvent(self, mouse):
         if self.panning:
@@ -396,9 +427,9 @@ class MainWindow(QtGui.QMainWindow):
             # Switch mouse position coord from QMainWindow to self.imagelabel (QLabel)
             im_pos = self.imageLabel.mapFromGlobal(self.mapToGlobal(mouse.pos()))
             self.update_statusbar_pos(im_pos.x(), im_pos.y())
-            # Draw zoomer rect
+            # Update zoomer
             self.sir_files[0]['pix_loc'] = im_pos
-            self.draw_zoomer_rect()
+            self.update_zoomer()
     
     def mouseReleaseEvent(self, mouse):
         if mouse.button() == Qt.RightButton and self.panning:
