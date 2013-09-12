@@ -16,7 +16,6 @@ from PyQt4 import QtCore,QtGui
 
 from . import __version__
 from .mainwindow import MainWindow
-from loadsir import loadsir
 
 #class Dame(QtGui.QApplication):
 #    def __init__(self, args):
