@@ -23,6 +23,7 @@ Dame can:
 * Pan around the image by right-click dragging
 * Display information about the currently selected pixel
 * Display the pretty-printed SIR header
+* Popup a magnified view of the selected region
 
 Installation
 ============
@@ -44,7 +45,7 @@ With libsir installed, dame should run just fine.
 Changelog
 =========
 
-v0.1 2013-xx-xx
+v0.1 2013-09-12
 
 * Implemented basic functionality (load SIR, pan, show zoomed region)
 
