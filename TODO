@@ -2,9 +2,8 @@
 TODO
 ====
 
-* Ensure lat/lon/value and coord indexing agrees with simp and sirtool
-* Create Arch PKGBUILD
 * v0.1
+* Create Arch PKGBUILD
 * Add keyboard shortcuts to move crosshair (like in sirtool; simp doesn't have it)
 * Be able to change display range
 * Be able to add some notes to each SIR (use QDockWidget)

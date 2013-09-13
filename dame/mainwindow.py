@@ -377,13 +377,14 @@ class MainWindow(QtGui.QMainWindow):
         nsx = self.sir_files[0]['header'].nsx
         nsy = self.sir_files[0]['header'].nsy
         # Convert from 0-based to 1-based indexing
-        y = nsy - y_im + 1 # Convert image y coord to SIR y coord
-        x =  x_im + 1
+        # (I've double-checked the values returned here using sir_util2a)
+        y = nsy - y_im # Convert image y coord to SIR y coord
+        x = x_im + 1
         if x > 0 and y > 0 and x <= nsx and y <= nsy:
             lon, lat = libsir.pix2latlon(x, y, self.sir_files[0]['header'])
             # Note that sir_data is 0-based indexing, but pix2latlon is 1-based
             stat_text = "x = {}, y = {}, lat = {:0.4f}, lon = {:0.4f}, value = {:0.4f}".format(
-                    x, y, lat, lon, self.sir_files[0]['data'][y-1, x-1])
+                    x, y, lat, lon, self.sir_files[0]['data'][y_im, x_im])
             self.status_coord_label.setText(stat_text)
 
     # Menu events
