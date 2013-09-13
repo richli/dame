@@ -15,6 +15,7 @@ TODO
 * Window icon: make a high heel or something ladylike
 * Add tabs for multiple files
 * Be able to open gzipped SIR files
+* Use basemap to draw coastlines and such? Show lat/lon gridlines?
 * Support reading sir.nc files (NetCDF formatted SIR files)?
 * Maybe have a Python implementation of libsir as a fallback?
 
