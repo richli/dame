@@ -21,7 +21,13 @@ with open(version_py, 'w') as fh:
 
 setup(
         name = "dame",
+        author = "Richard Lindsley",
         version = version_git, 
         packages = find_packages(),
         license = "MIT",
+        entry_points = {
+            'gui_scripts': [
+                'dame = dame.dame:main'
+                ]
+            },
      )
