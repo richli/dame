@@ -4,7 +4,6 @@ TODO
 
 * Basic simp functionality
 
-  * Zoomer window (in progress, need to draw crosshair)
   * Show SIR header info in dialog box (menu item)
 
 * Ensure lat/lon/value and coord indexing agrees with simp and sirtool
