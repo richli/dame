@@ -2,10 +2,6 @@
 TODO
 ====
 
-* Basic simp functionality
-
-  * Show SIR header info in dialog box (menu item)
-
 * Ensure lat/lon/value and coord indexing agrees with simp and sirtool
 * Create Arch PKGBUILD
 * v0.1

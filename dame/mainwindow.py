@@ -252,7 +252,12 @@ class MainWindow(QtGui.QMainWindow):
     def print_header(self):
         """ Display SIR header info """
         sir_head = libsir.print_sir_head(self.sir_files[0]['header'])
-        print(sir_head)
+        # TODO: Maybe make this a modeless dialog instead of modal? Use a dock
+        # widget?
+        box = QMessageBox()
+        box.setText(dedent(sir_head))
+        box.setIcon(QMessageBox.Information)
+        box.exec_()
 
     def update_image(self):
         """ Reload the image """
