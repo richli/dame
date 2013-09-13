@@ -2,7 +2,7 @@
 
 # DEBUG
 import sys
-sys.path.append("./")
+sys.path.insert(0, "./")
 # END DEBUG
 
 from dame.dame import main
