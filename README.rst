@@ -47,6 +47,7 @@ Changelog
 
 v0.2 2013-xx-xx
 
+* Some bugfixes
 * Add keyboard shortcuts for nagivation (not implemented yet)
 
 v0.1 2013-09-12

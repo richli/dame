@@ -269,7 +269,7 @@ class MainWindow(QtGui.QMainWindow):
         vmin = header.v_min
         vmax = header.v_max
         anodata = header.anodata
-        v_offset = vmax - vmin
+        v_offset = -vmin
         v_scale = 255 / (vmax - vmin)
         #image = QImage(nsx, nsy, QImage.Format_ARGB32)
         image = QImage(nsx, nsy, QImage.Format_RGB32)
