@@ -2,7 +2,6 @@
 TODO
 ====
 
-* Create Arch PKGBUILD
 * Add keyboard shortcuts to move crosshair (like in sirtool; simp doesn't have it)
 * Be able to change display range
 * Be able to add some notes to each SIR (use QDockWidget)

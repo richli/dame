@@ -45,6 +45,10 @@ With libsir installed, dame should run just fine.
 Changelog
 =========
 
+v0.2 2013-xx-xx
+
+* Add keyboard shortcuts for nagivation (not implemented yet)
+
 v0.1 2013-09-12
 
 * Implemented basic functionality (load SIR, pan, show zoomed region)
