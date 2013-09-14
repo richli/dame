@@ -467,4 +467,33 @@ class MainWindow(QtGui.QMainWindow):
             self.scanning = None
 
     # Keyboard events
-    # TODO
+    def keyPressEvent(self, key):
+        if 'pix_loc' not in self.sir_files[0]:
+            # Don't do anything if we don't have a coord yet
+            key.ignore()
+            return
+
+        # Increment im_pos if valid key
+        im_pos = self.sir_files[0]['pix_loc']
+        delta = 5 if key.modifiers() == Qt.ShiftModifier else 1
+        if key.key() == Qt.Key_J:
+            # Down
+            im_pos.setY(im_pos.y() + delta)
+        elif key.key() == Qt.Key_K:
+            # Up
+            im_pos.setY(im_pos.y() - delta)
+        elif key.key() == Qt.Key_H:
+            # Left
+            im_pos.setX(im_pos.x() - delta)
+        elif key.key() == Qt.Key_L:
+            # Right
+            im_pos.setX(im_pos.x() + delta)
+        else:
+            key.ignore()
+            return
+
+        # Update stuff with our new position
+        self.sir_files[0]['pix_loc'] = im_pos
+        self.update_zoomer()
+        self.update_statusbar_pos(im_pos.x(), im_pos.y())
+
