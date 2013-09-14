@@ -20,10 +20,11 @@ Features
 Dame can:
 
 * Load a SIR image (using the C SIR library)
+* Display the pretty-printed SIR header
 * Pan around the image by right-click dragging
 * Display information about the currently selected pixel
-* Display the pretty-printed SIR header
 * Popup a magnified view of the selected region
+* Use keyboard shortcuts to move crosshair (hjkl to move one pixel, use shift to move five pixels)
 
 Installation
 ============
@@ -45,10 +46,10 @@ With libsir installed, dame should run just fine.
 Changelog
 =========
 
-v0.2 2013-xx-xx
+v0.2 2013-09-13
 
+* Add keyboard shortcuts for nagivation (vim-like)
 * Some bugfixes
-* Add keyboard shortcuts for nagivation (not implemented yet)
 
 v0.1 2013-09-12
 

@@ -2,8 +2,8 @@
 TODO
 ====
 
-* Add keyboard shortcuts to move crosshair (like in sirtool; simp doesn't have it)
 * Be able to change display range
+* Clean up statusbar a little (e.g., move filename elsewhere?)
 * Be able to add some notes to each SIR (use QDockWidget)
 * Add a mode to compare two SIRs together
 
@@ -16,6 +16,7 @@ TODO
 * Add tabs for multiple files
 * Be able to open gzipped SIR files
 * Use basemap to draw coastlines and such? Show lat/lon gridlines?
+* Make a man page?
 * Support reading sir.nc files (NetCDF formatted SIR files)?
 * Maybe have a Python implementation of libsir as a fallback?
 
