@@ -448,6 +448,10 @@ class MainWindow(QtGui.QMainWindow):
 
     # Mouse events
     def mousePressEvent(self, mouse):
+        if 0 not in self.sir_files:
+            mouse.ignore()
+            return
+
         if mouse.button() == Qt.RightButton:
             self.panning = mouse.pos()
             self.imageLabel.setCursor(QCursor(Qt.ClosedHandCursor))
@@ -461,6 +465,10 @@ class MainWindow(QtGui.QMainWindow):
             self.update_zoomer()
 
     def mouseMoveEvent(self, mouse):
+        if 0 not in self.sir_files:
+            mouse.ignore()
+            return
+
         if self.panning:
             dx = self.panning.x() - mouse.pos().x()
             dy = self.panning.y() - mouse.pos().y()
@@ -478,6 +486,10 @@ class MainWindow(QtGui.QMainWindow):
             self.update_zoomer()
     
     def mouseReleaseEvent(self, mouse):
+        if 0 not in self.sir_files:
+            mouse.ignore()
+            return
+
         if mouse.button() == Qt.RightButton and self.panning:
             self.panning = None
             self.imageLabel.setCursor(QCursor(Qt.CrossCursor))
@@ -486,6 +498,10 @@ class MainWindow(QtGui.QMainWindow):
 
     # Keyboard events
     def keyPressEvent(self, key):
+        if 0 not in self.sir_files:
+            key.ignore()
+            return
+
         if 'pix_loc' not in self.sir_files[0]:
             # Don't do anything if we don't have a coord yet
             key.ignore()
