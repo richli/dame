@@ -273,21 +273,21 @@ class MainWindow(QtGui.QMainWindow):
         anodata = header.anodata
         v_offset = -vmin
         v_scale = 255 / (vmax - vmin)
-        #image = QImage(nsx, nsy, QImage.Format_ARGB32)
-        image = QImage(nsx, nsy, QImage.Format_RGB32)
+
         # Scale the SIR image to the range of 0,255
         sir_scale = ma.masked_less_equal(sirdata, anodata, copy=True)
         sir_scale += v_offset
         sir_scale *= v_scale
         sir_scale = sir_scale.filled(0) # all nodata values are set to 0
-        for x in xrange(nsx):
-            for y in xrange(nsy):
-                #pix_val = QtGui.qRgba(1, 2, 3, 128)
-                sir_val = sir_scale[y,x]
-                sir_val = int(round(sir_val))
-                # TODO: I could use a different colormap here
-                pix_val = QtGui.qRgb(sir_val, sir_val, sir_val)
-                image.setPixel(x, y, pix_val)
+        # Construct image from sir_scale
+        # http://www.swharden.com/blog/2013-06-03-realtime-image-pixelmap-from-numpy-array-data-in-qt/
+        image = QImage(sir_scale.data, nsx, nsy, QImage.Format_Indexed8)
+        #ctab = []
+        #for i in xrange(256):
+        #    ctab.append(QtGui.qRgb(i,i,i))
+        #image.setColorTable(ctab)
+
+        # Display it
         pixmap = QPixmap.fromImage(image)
         self.imageLabel.setHidden(False)
         self.imageLabel.setPixmap(pixmap)
@@ -295,6 +295,7 @@ class MainWindow(QtGui.QMainWindow):
         self.imageLabel.setCursor(QCursor(Qt.CrossCursor))
         self.update_statusbar()
         self.sir_files[0]['pixmap'] = pixmap
+        self.imageLabel.update()
 
     def update_zoomer(self):
         """ Update the zoomer, both the image as well as the popup """
