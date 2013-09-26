@@ -305,6 +305,11 @@ class MainWindow(QtGui.QMainWindow):
         sir_scale += v_offset
         sir_scale *= v_scale
         sir_scale = sir_scale.filled(0) # all nodata values are set to 0
+        # Clip to 0,255
+        sir_scale[sir_scale < 0] = 0
+        sir_scale[sir_scale > 255] = 255
+        sir_scale = sir_scale.astype('uint8')
+
         # Construct image from sir_scale
         # http://www.swharden.com/blog/2013-06-03-realtime-image-pixelmap-from-numpy-array-data-in-qt/
         image = QImage(sir_scale.data, nsx, nsy, QImage.Format_Indexed8)
