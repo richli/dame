@@ -54,6 +54,8 @@ class MainWindow(QtGui.QMainWindow):
 
         # Create popup windows (for zoomer and panner)
         self.zoom_win = QtGui.QWidget(self, Qt.Window | Qt.Tool)
+        self.zoom_win.setSizePolicy(QtGui.QSizePolicy.Fixed,
+                QtGui.QSizePolicy.Fixed)
         self.zoom_win_im = QLabel()
         self.zoom_win_im.setSizePolicy(QtGui.QSizePolicy.Ignored,
                 QtGui.QSizePolicy.Ignored)
@@ -424,6 +426,7 @@ class MainWindow(QtGui.QMainWindow):
             # Compute zoomer window size and show/hide it
             winsize = self.sir_files[0]['zoomer_size'] * self.sir_files[0]['zoomer_factor']
             self.zoom_win.resize(winsize, winsize)
+            self.zoom_win.setFixedSize(winsize, winsize)
             if self.sir_files[0]['zoomer_on']:
                 self.zoom_win.show()
             else:
