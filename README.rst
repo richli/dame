@@ -25,6 +25,7 @@ Dame can:
 * Display information about the currently selected pixel
 * Popup a magnified view of the selected region
 * Use keyboard shortcuts to move crosshair (hjkl to move one pixel, use shift to move five pixels)
+* Change image display range
 
 Installation
 ============
@@ -45,6 +46,12 @@ With libsir installed, dame should run just fine.
 
 Changelog
 =========
+
+v0.3 2013-09-25
+
+* Add dialog to change image display range
+* Improved image loading speed
+* Several bugfixes
 
 v0.2 2013-09-13
 
