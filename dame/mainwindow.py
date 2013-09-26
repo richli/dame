@@ -481,20 +481,28 @@ class MainWindow(QtGui.QMainWindow):
             return
 
         # Increment im_pos if valid key
+        # Note that im_pos is 0-based, so 
+        # it ranges from 0 to nsx-1/nsy-1 inclusive
         im_pos = self.sir_files[0]['pix_loc']
+        nsx = self.sir_files[0]['header'].nsx
+        nsy = self.sir_files[0]['header'].nsy
         delta = 5 if key.modifiers() == Qt.ShiftModifier else 1
         if key.key() == Qt.Key_J:
             # Down
-            im_pos.setY(im_pos.y() + delta)
+            if im_pos.y() + delta < nsy:
+                im_pos.setY(im_pos.y() + delta)
         elif key.key() == Qt.Key_K:
             # Up
-            im_pos.setY(im_pos.y() - delta)
+            if im_pos.y() - delta >= 0:
+                im_pos.setY(im_pos.y() - delta)
         elif key.key() == Qt.Key_H:
             # Left
-            im_pos.setX(im_pos.x() - delta)
+            if im_pos.x() - delta >= 0:
+                im_pos.setX(im_pos.x() - delta)
         elif key.key() == Qt.Key_L:
             # Right
-            im_pos.setX(im_pos.x() + delta)
+            if im_pos.x() + delta < nsx:
+                im_pos.setX(im_pos.x() + delta)
         else:
             key.ignore()
             return
