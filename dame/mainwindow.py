@@ -387,6 +387,10 @@ class MainWindow(QtGui.QMainWindow):
                     x, y, lat, lon, self.sir_files[0]['data'][y_im, x_im])
             self.status_coord_label.setText(stat_text)
 
+    def sizeHint(self):
+        """ Override the suggested size """
+        return QtCore.QSize(800,600)
+
     # Menu events
     @QtCore.pyqtSlot()
     def update_zoomer_opts(self, draw_win=True):
