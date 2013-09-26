@@ -108,8 +108,7 @@ class MainWindow(QtGui.QMainWindow):
 
         self.range_action = QAction("Image range", self)
         self.range_action.setStatusTip("Set image display range")
-        self.range_action.setEnabled(False)
-        #self.range_action.triggered.connect(self.print_header)
+        self.range_action.triggered.connect(self.show_range)
 
         self.zoomer_action = QAction("Enable zoomer window", self)
         self.zoomer_action.setStatusTip("Show zoomer window for magnified viewing")
@@ -251,6 +250,18 @@ class MainWindow(QtGui.QMainWindow):
         QMessageBox.about(self, "About", dedent(about_text))
 
     @QtCore.pyqtSlot()
+    def show_range(self):
+        """ Display image range popup """
+        win = RangeWindow()
+        win.min_text.setText(str(self.sir_files[0]['vmin']))
+        win.max_text.setText(str(self.sir_files[0]['vmax']))
+        if win.exec_() == QtGui.QDialog.Accepted:
+            win_range = win.getRange()
+            self.sir_files[0]['vmin'] = win_range[0]
+            self.sir_files[0]['vmax'] = win_range[1]
+            self.update_image()
+
+    @QtCore.pyqtSlot()
     def print_header(self):
         """ Display SIR header info """
         sir_head = libsir.print_sir_head(self.sir_files[0]['header'])
@@ -268,8 +279,8 @@ class MainWindow(QtGui.QMainWindow):
         sirdata = self.sir_files[0]['data']
         nsx = header.nsx
         nsy = header.nsy
-        vmin = header.v_min
-        vmax = header.v_max
+        vmin = self.sir_files[0].setdefault('vmin', header.v_min)
+        vmax = self.sir_files[0].setdefault('vmax', header.v_max)
         anodata = header.anodata
         v_offset = -vmin
         v_scale = 255 / (vmax - vmin)
@@ -364,9 +375,8 @@ class MainWindow(QtGui.QMainWindow):
             logging.warning("Can't find {}".format(err))
 
     def update_statusbar(self):
-        header = self.sir_files[0]['header']
-        vmin = header.v_min
-        vmax = header.v_max
+        vmin = self.sir_files[0]['vmin']
+        vmax = self.sir_files[0]['vmax']
         self.pixinfo_label.setVisible(True)
         self.pixinfo_label.setText("{}, min: {}, max: {}".format(
             self.sir_files[0]['filename'],
@@ -513,3 +523,39 @@ class MainWindow(QtGui.QMainWindow):
         self.update_zoomer()
         self.update_statusbar_pos(im_pos.x(), im_pos.y())
 
+class RangeWindow(QtGui.QDialog):
+    def __init__(self, parent=None):
+        QtGui.QDialog.__init__(self, parent)
+
+        min_label = QtGui.QLabel("min")
+        max_label = QtGui.QLabel("max")
+        min_text = QtGui.QLineEdit()
+        max_text = QtGui.QLineEdit()
+        min_text.setValidator(QtGui.QDoubleValidator())
+        max_text.setValidator(QtGui.QDoubleValidator())
+
+        buttons = QtGui.QDialogButtonBox(QtGui.QDialogButtonBox.Ok |
+                QtGui.QDialogButtonBox.Cancel, Qt.Horizontal, parent=self)
+        buttons.accepted.connect(self.accept)
+        buttons.rejected.connect(self.reject)
+
+        vbox = QtGui.QVBoxLayout()
+        hbox = QtGui.QHBoxLayout()
+        hbox.addWidget(min_label)
+        hbox.addWidget(min_text)
+        hbox.addWidget(max_label)
+        hbox.addWidget(max_text)
+
+        vbox.addLayout(hbox)
+        vbox.addWidget(buttons)
+        self.setLayout(vbox)
+        self.setWindowTitle("Display range")
+
+        min_text.setFocus()
+
+        # Allow outside access to these
+        self.min_text = min_text
+        self.max_text = max_text
+
+    def getRange(self):
+        return (float(self.min_text.text()), float(self.max_text.text()))
