@@ -196,6 +196,11 @@ class MainWindow(QtGui.QMainWindow):
         menu = self.menuBar().addMenu("&Help")
         menu.addAction(self.about_action)
 
+        # Deactivate menus by default
+        self.range_action.setEnabled(False)
+        self.prop_action.setEnabled(False)
+        self.close_action.setEnabled(False)
+
     @QtCore.pyqtSlot()
     def open_file(self):
         """ Display open file dialog """
@@ -219,6 +224,11 @@ class MainWindow(QtGui.QMainWindow):
             self.update_image()
             self.statusBar().showMessage("Loaded", 2000)
 
+            # Activate menus
+            self.range_action.setEnabled(True)
+            self.prop_action.setEnabled(True)
+            self.close_action.setEnabled(True)
+
             # Set zoomer options
             self.zoom_factor_2_action.setChecked(True)
             self.zoom_size_2_action.setChecked(True)
@@ -239,6 +249,11 @@ class MainWindow(QtGui.QMainWindow):
         self.pixinfo_label.setVisible(False)
         self.status_coord_label.setVisible(False)
         self.statusBar().showMessage("SIR closed", 2000)
+
+        # Deactivate menus
+        self.range_action.setEnabled(False)
+        self.prop_action.setEnabled(False)
+        self.close_action.setEnabled(False)
 
     @QtCore.pyqtSlot()
     def show_about(self):
