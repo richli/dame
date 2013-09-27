@@ -5,7 +5,6 @@ TODO
 High priority
 -------------
 
-* Be able to add some notes to each SIR (use QDockWidget)
 * Clean up statusbar a little (e.g., move filename elsewhere?)
 * Add a mode to compare two SIRs together
 

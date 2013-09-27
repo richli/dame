@@ -35,7 +35,6 @@ class MainWindow(QtGui.QMainWindow):
         # TODO: Set window icon
         self.create_actions()
         self.create_statusbar()
-        self.create_menus()
 
         # Setup main image
         self.imageLabel = QLabel()
@@ -68,6 +67,23 @@ class MainWindow(QtGui.QMainWindow):
 
         #TODO: panner
 
+        # Create note dock widget
+        self.note_widget = QtGui.QDockWidget("Notes", parent=self)
+        self.note_text = QtGui.QTextEdit(parent=self.note_widget)
+        self.note_widget.setWidget(self.note_text)
+        self.note_widget.setFeatures(
+                QtGui.QDockWidget.DockWidgetClosable | 
+                QtGui.QDockWidget.DockWidgetMovable | 
+                QtGui.QDockWidget.DockWidgetFloatable | 
+                QtGui.QDockWidget.DockWidgetVerticalTitleBar)
+        self.addDockWidget(Qt.BottomDockWidgetArea, self.note_widget)
+        self.note_widget.close()
+        self.note_action = self.note_widget.toggleViewAction()
+        self.note_action.setText("Display notes")
+        self.note_action.setStatusTip("Show notes about the SIR image")
+
+        # Create the menus
+        self.create_menus()
 
     def create_statusbar(self):
         self.statusBar().showMessage("Ready")
@@ -179,6 +195,7 @@ class MainWindow(QtGui.QMainWindow):
         menu = self.menuBar().addMenu("Image")
         menu.addAction(self.prop_action)
         menu.addAction(self.range_action)
+        menu.addAction(self.note_action)
         menu = self.menuBar().addMenu("Zoomer")
         menu.addAction(self.zoomer_action)
         menu.addSeparator()
