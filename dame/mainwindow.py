@@ -240,6 +240,7 @@ class MainWindow(QtGui.QMainWindow):
                     'header': sir_head}
             self.update_image()
             self.statusBar().showMessage("Loaded", 2000)
+            self.setWindowTitle("dame - {}".format(filename))
 
             # Activate menus
             self.range_action.setEnabled(True)
@@ -419,9 +420,7 @@ class MainWindow(QtGui.QMainWindow):
         vmin = self.sir_files[0]['vmin']
         vmax = self.sir_files[0]['vmax']
         self.pixinfo_label.setVisible(True)
-        self.pixinfo_label.setText("{}, min: {}, max: {}".format(
-            self.sir_files[0]['filename'],
-            vmin, vmax))
+        self.pixinfo_label.setText("min: {}, max: {}".format(vmin, vmax))
         self.status_coord_label.setVisible(False)
 
     def update_statusbar_pos(self, x_im, y_im):
@@ -437,7 +436,7 @@ class MainWindow(QtGui.QMainWindow):
         if x > 0 and y > 0 and x <= nsx and y <= nsy:
             lon, lat = libsir.pix2latlon(x, y, self.sir_files[0]['header'])
             # Note that sir_data is 0-based indexing, but pix2latlon is 1-based
-            stat_text = "x = {}, y = {}, lat = {:0.4f}, lon = {:0.4f}, value = {:0.4f}".format(
+            stat_text = "x = {}, y = {}   lat = {:0.4f}, lon = {:0.4f}   value = {:0.4f}".format(
                     x, y, lat, lon, self.sir_files[0]['data'][y_im, x_im])
             self.status_coord_label.setText(stat_text)
 

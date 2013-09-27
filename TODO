@@ -5,7 +5,6 @@ TODO
 High priority
 -------------
 
-* Clean up statusbar a little (e.g., move filename elsewhere?)
 * Add a mode to compare two SIRs together
 
   * Crossfade between them
