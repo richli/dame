@@ -178,6 +178,22 @@ class MainWindow(QtGui.QMainWindow):
         self.zoom_size_group.addAction(self.zoom_size_4_action)
         self.zoom_size_group.triggered.connect(self.update_zoomer_opts)
 
+        # Mode actions
+        self.mode_group = QtGui.QActionGroup(self)
+        self.mode_single_action = QAction("Single image", self.mode_group)
+        self.mode_split_action = QAction("Split view", self.mode_group)
+        self.mode_fade_action = QAction("Crossfade view", self.mode_group)
+        self.mode_single_action.setCheckable(True)
+        self.mode_split_action.setCheckable(True)
+        self.mode_fade_action.setCheckable(True)
+        self.mode_single_action.setStatusTip("Display a single image")
+        self.mode_split_action.setStatusTip("Display two images in split screen")
+        self.mode_fade_action.setStatusTip("Crossfade between two images")
+        self.mode_single_action.setChecked(True)
+        self.mode_split_action.setEnabled(False) # TODO: temp until I enable this
+        self.mode_fade_action.setEnabled(False) # TODO: temp
+        #self.mode_group.triggered.connect(self.update_zoomer_opts) # TODO
+
         # http://stackoverflow.com/questions/11643221/are-there-default-icons-in-pyqt-pyside
         # TODO: Add icons in a better way. See how Picard does it.
         QIcon.setThemeName("gnome") # TODO: temporary
@@ -196,6 +212,10 @@ class MainWindow(QtGui.QMainWindow):
         menu.addAction(self.prop_action)
         menu.addAction(self.range_action)
         menu.addAction(self.note_action)
+        submenu = menu.addMenu("Mode")
+        submenu.addAction(self.mode_single_action)
+        submenu.addAction(self.mode_split_action)
+        submenu.addAction(self.mode_fade_action)
         menu = self.menuBar().addMenu("Zoomer")
         menu.addAction(self.zoomer_action)
         menu.addSeparator()
