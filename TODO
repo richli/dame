@@ -2,8 +2,11 @@
 TODO
 ====
 
-* Clean up statusbar a little (e.g., move filename elsewhere?)
+High priority
+-------------
+
 * Be able to add some notes to each SIR (use QDockWidget)
+* Clean up statusbar a little (e.g., move filename elsewhere?)
 * Add a mode to compare two SIRs together
 
   * Crossfade between them
@@ -11,9 +14,14 @@ TODO
   * Clicking a pixel displays the value in both SIRs
   * Create and show the difference SIR
 
+Low priority
+------------
+
 * Window icon: make a high heel or something ladylike
-* Add tabs for multiple files
+* Add tabs for multiple files?
 * Be able to open gzipped SIR files
+* Add keyboard shortcuts for changing display range, popup zoomer window, etc
+* Add panner window?
 * Use basemap to draw coastlines and such? Show lat/lon gridlines?
 * Make a man page?
 * Support reading sir.nc files (NetCDF formatted SIR files)?
