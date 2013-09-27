@@ -2,8 +2,6 @@
 TODO
 ====
 
-* BUG: zoomer on the edges may not display the edge pixels properly
-* BUG: There may be an off-by-one error on indexing the image in the y dimension? Double check. Related to above bug.
 * Clean up statusbar a little (e.g., move filename elsewhere?)
 * Be able to add some notes to each SIR (use QDockWidget)
 * Add a mode to compare two SIRs together

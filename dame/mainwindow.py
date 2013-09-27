@@ -335,19 +335,23 @@ class MainWindow(QtGui.QMainWindow):
             pixmap = self.sir_files[0]['pixmap'].copy()
             rect_w = self.sir_files[0]['zoomer_size']
             winsize = rect_w * self.sir_files[0]['zoomer_factor']
+
             # Upper left corner
             if loc.x() < rect_w/2: 
-                rect_x = 0.5
+                rect_x = -0.5
             elif loc.x() > pixmap.width() - rect_w/2:
                 rect_x = pixmap.width() - rect_w - 0.5
             else:
                 rect_x = loc.x() - rect_w/2
             if loc.y() < rect_w/2: 
-                rect_y = 0.5
+                rect_y = -0.5
             elif loc.y() > pixmap.height() - rect_w/2:
                 rect_y = pixmap.height() - rect_w - 0.5
             else:
                 rect_y = loc.y() - rect_w/2
+
+            rect_x += 1
+            rect_y += 1
 
             # Draw the image with the zoomer region outlined
             p = QtGui.QPainter()
@@ -374,18 +378,18 @@ class MainWindow(QtGui.QMainWindow):
             p.setPen(QtGui.QColor("#FFFFFF")) # White stroke
             zoom_fac = self.sir_files[0]['zoomer_factor']
             # Top left of magnified pixel
-            mag_pix = (zoom_fac * (loc.x() - rect_x) - zoom_fac/2, 
-                    zoom_fac * (loc.y() - rect_y) - zoom_fac/2)
+            mag_pix = (zoom_fac * (loc.x() - rect_x + 1) - zoom_fac/2, 
+                    zoom_fac * (loc.y() - rect_y + 1) - zoom_fac/2)
             # Center of magnified pixel
-            mag_pix_cen = (zoom_fac * (loc.x() - rect_x), 
-                    zoom_fac * (loc.y() - rect_y))
+            mag_pix_cen = (zoom_fac * (loc.x() - rect_x + 1), 
+                    zoom_fac * (loc.y() - rect_y + 1))
             p.drawRect(mag_pix[0], mag_pix[1], zoom_fac, zoom_fac)
             # Draw crosshairs
             p.setPen(QtGui.QColor("#FFFFFF")) # White stroke
-            p.drawLine(mag_pix_cen[0],2,mag_pix_cen[0],mag_pix[1]-1) # vertical line, top
-            p.drawLine(mag_pix_cen[0],mag_pix[1]+zoom_fac, mag_pix_cen[0],winsize-2) # vertical line, bottom
-            p.drawLine(2,mag_pix_cen[1],mag_pix[0]-1,mag_pix_cen[1]) # horizontal line, left
-            p.drawLine(mag_pix[0]+zoom_fac,mag_pix_cen[1],winsize-2,mag_pix_cen[1]) # horizontal line, right
+            p.drawLine(mag_pix_cen[0],0,mag_pix_cen[0],mag_pix[1]-1) # vertical line, top
+            p.drawLine(mag_pix_cen[0],mag_pix[1]+zoom_fac, mag_pix_cen[0],winsize-0) # vertical line, bottom
+            p.drawLine(0,mag_pix_cen[1],mag_pix[0]-1,mag_pix_cen[1]) # horizontal line, left
+            p.drawLine(mag_pix[0]+zoom_fac,mag_pix_cen[1],winsize-0,mag_pix_cen[1]) # horizontal line, right
             p.end()
 
             self.zoom_win_im.setHidden(False)
