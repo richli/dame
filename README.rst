@@ -21,11 +21,17 @@ Dame can:
 
 * Load a SIR image (using the C SIR library)
 * Display the pretty-printed SIR header
-* Pan around the image by right-click dragging
+* Pan around the image by middle-click dragging
 * Display information about the currently selected pixel
 * Popup a magnified view of the selected region
 * Use keyboard shortcuts to move crosshair (hjkl to move one pixel, use shift to move five pixels)
 * Change image display range
+* Store temporary notes in a dock widget
+* Comparison view
+
+  * Split view of two SIR files
+  * For a given pixel, display the SIR values for both images simultaneously
+  * Crossfade between the two SIR files (coming soon)
 
 Installation
 ============
@@ -46,6 +52,13 @@ With libsir installed, dame should run just fine.
 
 Changelog
 =========
+
+v0.4 2013-09-27
+
+* Add comparison mode with split view
+* Change mouse panning from right-click to middle-click
+* Add a "notes" dock widget
+* More bugfixes
 
 v0.3 2013-09-25
 
