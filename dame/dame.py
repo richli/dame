@@ -42,9 +42,11 @@ def main():
     qt_app = QtGui.QApplication(sys.argv)
     frame = MainWindow()
     frame.show()
-    # TODO: Handle multiple files
+    # TODO: Handle multiple files better
     if len(args.sir_files) > 0:
         frame.load_sir(args.sir_files[0])
+    if len(args.sir_files) > 1:
+        frame.load_sir(args.sir_files[1])
     qt_app.exec_()
 
 if __name__ == "__main__":
