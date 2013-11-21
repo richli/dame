@@ -679,8 +679,14 @@ class MainViewer(QtGui.QWidget):
             self.sir_files['fade'] = {}
             old_head = self.sir_files['left']['header']
             if old_head.nsx != sir_head.nsx or \
-               old_head.nsy != sir_head.nsy:
-                   # TODO
+               old_head.nsy != sir_head.nsy or \
+               old_head.iopt != sir_head.iopt or \
+               old_head.xdeg != sir_head.xdeg or \
+               old_head.ydeg != sir_head.ydeg or \
+               old_head.ascale != sir_head.ascale or \
+               old_head.bscale != sir_head.bscale or \
+               old_head.a0 != sir_head.a0 or \
+               old_head.b0 != sir_head.b0:
                    logging.error("New SIR isn't compatible with old SIR for comparison purposes")
 
         self.cur_tab = file_index
