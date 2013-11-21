@@ -53,6 +53,10 @@ With libsir installed, dame should run just fine.
 Changelog
 =========
 
+v0.6 2013-xx-xx
+
+* The zoomer window shows both sides during split view
+
 v0.5 2013-11-20
 
 * Bugfix: images with a width not a power of 4 were warped really weird

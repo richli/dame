@@ -389,7 +389,10 @@ class MainWindow(QtGui.QMainWindow):
                 pixmaps = \
                 (self.mainview.sir_files[self.mainview.cur_tab]['pixmap'],)
 
-            for pixmap_src in pixmaps:
+            if len(pixmaps) == 2:
+                zoom_pixmap = QPixmap(2*winsize, winsize)
+
+            for pixmap_i, pixmap_src in enumerate(pixmaps):
                 # extract the zoomer region
                 pixmap = pixmap_src.copy(rect_x, rect_y, rect_w, rect_w)
                 # scale it
@@ -419,9 +422,15 @@ class MainWindow(QtGui.QMainWindow):
                 p.drawLine(mag_pix[0]+zoom_fac,mag_pix_cen[1],winsize-0,mag_pix_cen[1]) # horizontal line, right
                 p.end()
 
-                self.zoom_win_im.setHidden(False)
-                self.zoom_win_im.setPixmap(pixmap)
-                self.zoom_win_im.adjustSize()
+                if len(pixmaps) == 1:
+                    self.zoom_win_im.setPixmap(pixmap)
+                else:
+                    p = QtGui.QPainter(zoom_pixmap)
+                    p.drawPixmap(pixmap_i * winsize, 0, pixmap)
+                    self.zoom_win_im.setPixmap(zoom_pixmap)
+
+            self.zoom_win_im.setHidden(False)
+            self.zoom_win_im.adjustSize()
 
         except KeyError as err:
             logging.warning("Can't find {}".format(err))
@@ -509,8 +518,13 @@ class MainWindow(QtGui.QMainWindow):
         if draw_win:
             # Compute zoomer window size and show/hide it
             winsize = file_dict['zoomer_size'] * file_dict['zoomer_factor']
-            self.zoom_win.resize(winsize, winsize)
-            self.zoom_win.setFixedSize(winsize, winsize)
+            if self.mainview.cur_tab == "split":
+                self.zoom_win.resize(2*winsize, winsize)
+                self.zoom_win.setFixedSize(2*winsize, winsize)
+            else:
+                self.zoom_win.resize(winsize, winsize)
+                self.zoom_win.setFixedSize(winsize, winsize)
+
             if file_dict['zoomer_on']:
                 self.zoom_win.show()
             else:
