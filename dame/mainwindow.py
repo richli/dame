@@ -35,6 +35,9 @@ class MainWindow(QtGui.QMainWindow):
 
         self.mainview = MainViewer(parent=self)
 
+        ## Connect an action now that mainview is set
+        #self.mode_group.triggered.connect(self.mainview.toggleComparison)
+
         # TODO: This is the start of using tabbed windows
         #self.mdiArea = QtGui.QMdiArea(parent=self)
         #first = self.mdiArea.addSubWindow(self.scrollArea)
@@ -199,18 +202,13 @@ class MainWindow(QtGui.QMainWindow):
         ## Mode actions
         #self.mode_group = QtGui.QActionGroup(self)
         #self.mode_single_action = QAction("Single image", self.mode_group)
-        #self.mode_split_action = QAction("Split view", self.mode_group)
-        #self.mode_fade_action = QAction("Crossfade view", self.mode_group)
+        #self.mode_dual_action = QAction("Two images", self.mode_group)
         #self.mode_single_action.setCheckable(True)
-        #self.mode_split_action.setCheckable(True)
-        #self.mode_fade_action.setCheckable(True)
+        #self.mode_dual_action.setCheckable(True)
         #self.mode_single_action.setStatusTip("Display a single image")
-        #self.mode_split_action.setStatusTip("Display two images in split screen")
-        #self.mode_fade_action.setStatusTip("Crossfade between two images")
+        #self.mode_dual_action.setStatusTip("Display two images for comparison")
         #self.mode_single_action.setChecked(True)
-        #self.mode_split_action.setEnabled(False) # TODO: temp until I enable this
-        #self.mode_fade_action.setEnabled(False) # TODO: temp
-        ##self.mode_group.triggered.connect(self.update_zoomer_opts) # TODO
+        ##self.mode_group.triggered.connect(self.mainview.toggleComparison) # Moved later
 
         # http://stackoverflow.com/questions/11643221/are-there-default-icons-in-pyqt-pyside
         # TODO: Add icons in a better way. See how Picard does it.
@@ -225,6 +223,9 @@ class MainWindow(QtGui.QMainWindow):
         menu.addAction(self.open_action)
         menu.addAction(self.close_action)
         menu.addSeparator()
+        #menu.addAction(self.mode_single_action)
+        #menu.addAction(self.mode_dual_action)
+        #menu.addSeparator()
         menu.addAction(self.exit_action)
         menu = self.menuBar().addMenu("Image")
         menu.addAction(self.prop_action)
