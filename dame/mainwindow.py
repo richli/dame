@@ -712,9 +712,11 @@ class MainViewer(QtGui.QWidget):
             # Remove tabs
             while self.tabbar.count() > 0:
                 self.tabbar.removeTab(0)
+            self.tabbar.setVisible(False)
         # Comparison mode
         else:
             logging.info("toggleComparison: comparison mode")
+            self.tabbar.setVisible(True)
             self.setWindowTitle("dame")
             self.tabbar.addTab(self.sir_files['left']['filename'])
             self.tabbar.addTab("Split view")
