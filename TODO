@@ -28,6 +28,5 @@ Known bugs
 ----------
 
 * If zoomer window is focused, key presses don't go through to main window
-* Some regions are projected weird (I'm not sure which ones)
 
 .. vim: ft=rst

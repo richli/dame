@@ -767,11 +767,17 @@ class MainViewer(QtGui.QWidget):
             # Clip to 0,255
             sir_scale[sir_scale < 0] = 0
             sir_scale[sir_scale > 255] = 255
-            sir_scale = sir_scale.astype('uint8')
+            # Ensure uint8 data and C contiguous data
+            sir_scale = np.require(sir_scale, np.uint8, 'C') 
 
             # Construct image from sir_scale
             # http://www.swharden.com/blog/2013-06-03-realtime-image-pixelmap-from-numpy-array-data-in-qt/
-            image = QImage(sir_scale.data, nsx, nsy, QImage.Format_Indexed8)
+            # Note that I use the bytesPerLine option here. Without it, the data
+            # must be 32-bit aligned (4 bytes). This means with uint8 data that
+            # the image width must be a multiple of 4. This does not apply to
+            # all SIR images, so I set bytesPerLine to be 
+            # nsx (items) * 1 (bytes/item)
+            image = QImage(sir_scale.data, nsx, nsy, nsx, QImage.Format_Indexed8)
             #ctab = []
             #for i in xrange(256):
             #    ctab.append(QtGui.qRgb(i,i,i))
