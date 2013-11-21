@@ -5,7 +5,9 @@ TODO
 High priority
 -------------
 
+* Split mode: Can the zoomer window show both?
 * Implement crossfade mode
+* Make a single view and comparison view mode more explicit
 
 Low priority
 ------------
@@ -13,20 +15,19 @@ Low priority
 * Window icon: make a high heel or something ladylike
 * Create and show the difference SIR in comparison view?
 * Finish context menu in MainViewer (for opening, closing, splitting, etc)?
-* Split mode: Can the zoomer window show both?
 * Be able to open gzipped SIR files (use libarchive? Or the Python stuff?)
 * Add keyboard shortcuts for changing display range, popup zoomer window, etc
 * Add panner window?
 * Status bar: I'm still not satisfied with it...
 * Use basemap to draw coastlines and such? Show lat/lon gridlines?
 * Make a man page?
-* Support reading sir.nc files (NetCDF formatted SIR files)?
-* Maybe have a Python implementation of libsir as a fallback?
+* Support reading sir.nc files (NetCDF formatted SIR files) and sir.h5 (HDF5 formatted SIR files)?
+* In ``setup.py``, include a way to download and compile libsir.so?
 
 Known bugs
 ----------
 
 * If zoomer window is focused, key presses don't go through to main window
-
+* Some regions are projected weird (I'm not sure which ones)
 
 .. vim: ft=rst
