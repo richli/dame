@@ -9,7 +9,7 @@ Dame is distributed under the MIT license.
 Dependencies
 ============
 
-* Python 2
+* Python 2.7
 * PyQt4
 * NumPy
 * libsir
@@ -53,9 +53,10 @@ With libsir installed, dame should run just fine.
 Changelog
 =========
 
-v0.6 2013-xx-xx
+v0.6 IN PROGRESS
 
 * The zoomer window shows both sides during split view
+* Minor bugfixes
 
 v0.5 2013-11-20
 
