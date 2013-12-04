@@ -1,4 +1,4 @@
-from __future__ import division
+from __future__ import division, absolute_import
 
 import os
 import logging
@@ -11,7 +11,7 @@ from PyQt4.QtGui import QImage, QLabel, QMessageBox, QScrollArea, QAction, QIcon
 from PyQt4.QtCore import Qt
 
 from . import version_string
-import libsir
+from dame import libsir
 
 #http://stackoverflow.com/questions/1736015/debugging-a-pyqt4-app
 def debug_trace():

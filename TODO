@@ -11,7 +11,6 @@ High priority
 Low priority
 ------------
 
-* Ensure it runs on Python 2.7 and 3.3 (unified codebase)
 * Window icon: make a high heel or something ladylike
 * Create and show the difference SIR in comparison view?
 * Finish context menu in MainViewer (for opening, closing, splitting, etc)?

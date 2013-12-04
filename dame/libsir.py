@@ -5,10 +5,12 @@ All I need to wrap are some of the functions in sir_ez.h
 
 """
 
-import numpy as np
-import tempfile
-
 import ctypes
+import tempfile
+import numpy as np
+
+from . import PY3
+
 from ctypes import c_float, c_int, c_char, c_short, c_char_p, c_void_p, Structure, byref, pointer, POINTER
 c_float_p = POINTER(c_float)
 
@@ -111,6 +113,10 @@ def get_sir(fname):
     # Create a new header for get_sir() to write into
     head = sir_head()       # C: sir_head head;
     data = c_float_p()      # C: float *data;
+
+    # Python3 ctypes uses bytes object instead of str for c_char_p
+    if PY3:
+        fname = fname.encode()
 
     retval = sirlib.get_sir(fname, byref(head), byref(data))
     if retval < 0:

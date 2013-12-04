@@ -3,6 +3,9 @@
 Its speciality is comparing two SIR files together.
 
 """
-from version import __version__
+import sys
+PY3 = sys.version >= '3'
+
+from .version import __version__
 version_string = __version__
 

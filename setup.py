@@ -1,5 +1,8 @@
+import sys
 import os.path
 import subprocess
+
+PY3 = sys.version >= '3'
 
 from setuptools import setup, find_packages
 
@@ -10,6 +13,9 @@ version_py = os.path.join(os.path.dirname(__file__), 'dame', 'version.py')
 
 try:
     version_git = subprocess.check_output(["git", "describe", "--always"]).rstrip()
+    # Convert bytes to str for Python3
+    if PY3:
+        version_git = version_git.decode()
 except:
     with open(version_py, 'r') as fh:
         #version_git = open(version_py).read().strip().split('=')[-1].replace('"','')

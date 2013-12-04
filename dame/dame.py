@@ -14,7 +14,7 @@ sip.setapi('QUrl', 2)
 sip.setapi('QVariant', 2)
 from PyQt4 import QtCore,QtGui
 
-from . import __version__
+from .version import __version__
 from .mainwindow import MainWindow
 
 #class Dame(QtGui.QApplication):
