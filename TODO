@@ -20,6 +20,7 @@ Low priority
 * Add panner window?
 * Status bar: I'm still not satisfied with it...
 * Use basemap to draw coastlines and such? Show lat/lon gridlines?
+* Be able to draw a region box? For example, given lower-left and upper-right corners, draw the region bounding box. Note that due to map projections, the box probably won't be square. This shouldn't be too hard once basemap is used.
 * Make a man page?
 * Support reading sir.nc files (NetCDF formatted SIR files) and sir.h5 (HDF5 formatted SIR files)?
 * In ``setup.py``, include a way to download and compile libsir.so?
