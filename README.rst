@@ -32,6 +32,10 @@ Dame can:
   * Split view of two SIR files
   * For a given pixel, display the SIR values for both images simultaneously
   * Crossfade between the two SIR files (coming soon)
+  
+Screenshot
+==========
+.. image:: http://i.imgur.com/6sRidwW.png
 
 Installation
 ============
