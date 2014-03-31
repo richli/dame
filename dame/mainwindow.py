@@ -6,9 +6,18 @@ from textwrap import dedent
 
 import numpy as np
 import numpy.ma as ma
-from PyQt4 import QtCore, QtGui
-from PyQt4.QtGui import QImage, QLabel, QMessageBox, QScrollArea, QAction, QIcon, QPixmap, QCursor
-from PyQt4.QtCore import Qt
+try:
+    from PyQt4 import QtCore, QtGui
+    from PyQt4.QtGui import QImage, QLabel, QMessageBox, QScrollArea, QAction, QIcon, QPixmap, QCursor
+    from PyQt4.QtCore import Qt
+    QtCore.Slot = QtCore.pyqtslot
+    py_binding = 'PyQt4'
+except ImportError as e:
+    print("PyQt4 not found, falling back to PySide")
+    from PySide import QtCore, QtGui
+    from PySide.QtGui import QImage, QLabel, QMessageBox, QScrollArea, QAction, QIcon, QPixmap, QCursor
+    from PySide.QtCore import Qt
+    py_binding = 'PySide'
 
 from . import version_string
 from dame import libsir
@@ -16,7 +25,10 @@ from dame import libsir
 #http://stackoverflow.com/questions/1736015/debugging-a-pyqt4-app
 def debug_trace():
     '''Set a tracepoint in the Python debugger that works with Qt'''
-    from PyQt4.QtCore import pyqtRemoveInputHook
+    if py_binding == 'PyQt4':
+        from PyQt4.QtCore import pyqtRemoveInputHook
+    elif py_binding == 'PySide':
+        from PySide.QtCore import pyqtRemoveInputHook
     from pdb import set_trace
     pyqtRemoveInputHook()
     set_trace()
@@ -257,7 +269,7 @@ class MainWindow(QtGui.QMainWindow):
         self.prop_action.setEnabled(False)
         self.close_action.setEnabled(False)
 
-    @QtCore.pyqtSlot()
+    @QtCore.Slot()
     def open_file(self):
         """ Display open file dialog """
         filename = QtGui.QFileDialog.getOpenFileName(self, 
@@ -265,6 +277,8 @@ class MainWindow(QtGui.QMainWindow):
                 QtCore.QDir.homePath(), 
                 "SIR files (*.sir *.ave);;Any file (*)"
                 )
+        if py_binding == 'PySide':
+            filename = filename[0]
         if filename:
             self.load_sir(filename)
 
@@ -282,7 +296,7 @@ class MainWindow(QtGui.QMainWindow):
             logging.warning("Can't open {}".format(filename))
             # TODO: Alert the user via GUI
 
-    @QtCore.pyqtSlot()
+    @QtCore.Slot()
     def close_file(self):
         """ Close file """
         logging.info("Closing SIR file")
@@ -299,7 +313,7 @@ class MainWindow(QtGui.QMainWindow):
             self.prop_action.setEnabled(False)
             self.close_action.setEnabled(False)
 
-    @QtCore.pyqtSlot()
+    @QtCore.Slot()
     def show_about(self):
         """ Display about popup """
         about_text= """
@@ -308,7 +322,7 @@ class MainWindow(QtGui.QMainWindow):
                 Dame is a SIR file viewer""".format(version_string)
         QMessageBox.about(self, "About", dedent(about_text))
 
-    @QtCore.pyqtSlot()
+    @QtCore.Slot()
     def show_range(self):
         """ Display image range popup """
         win = RangeWindow()
@@ -321,7 +335,7 @@ class MainWindow(QtGui.QMainWindow):
             self.mainview.update_image(self.mainview.cur_tab)
             self.mainview.update_view()
 
-    @QtCore.pyqtSlot()
+    @QtCore.Slot()
     def print_header(self):
         """ Display SIR header info """
         sir_head = libsir.print_sir_head(self.mainview.sir_files[self.mainview.cur_tab]['header'])
@@ -486,7 +500,7 @@ class MainWindow(QtGui.QMainWindow):
         return QtCore.QSize(1000,800)
 
     # Menu events
-    @QtCore.pyqtSlot()
+    @QtCore.Slot()
     def update_zoomer_opts(self, draw_win=True):
         """ Given a menu change, this sets zoomer options and updates """
         file_dict = self.mainview.sir_files[self.mainview.cur_tab]

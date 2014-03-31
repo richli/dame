@@ -4,15 +4,23 @@ import sys, os
 import argparse
 import logging
 
-import sip
-sip.setapi('QDate', 2)
-sip.setapi('QDateTime', 2)
-sip.setapi('QString', 2)
-sip.setapi('QTextStream', 2)
-sip.setapi('QTime', 2)
-sip.setapi('QUrl', 2)
-sip.setapi('QVariant', 2)
-from PyQt4 import QtCore,QtGui
+PY3 = sys.version_info.major == 3
+
+try:
+    if not PY3:
+        import sip
+        sip.setapi('QDate', 2)
+        sip.setapi('QDateTime', 2)
+        sip.setapi('QString', 2)
+        sip.setapi('QTextStream', 2)
+        sip.setapi('QTime', 2)
+        sip.setapi('QUrl', 2)
+        sip.setapi('QVariant', 2)
+    else:
+        from PyQt4 import QtCore,QtGui
+except ImportError as e:
+    print("PyQt4 not found, falling back to PySide")
+    from PySide import QtCore,QtGui
 
 from .version import __version__
 from .mainwindow import MainWindow
