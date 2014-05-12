@@ -16,8 +16,7 @@ try:
         sip.setapi('QTime', 2)
         sip.setapi('QUrl', 2)
         sip.setapi('QVariant', 2)
-    else:
-        from PyQt4 import QtCore,QtGui
+    from PyQt4 import QtCore,QtGui
 except ImportError as e:
     print("PyQt4 not found, falling back to PySide")
     from PySide import QtCore,QtGui

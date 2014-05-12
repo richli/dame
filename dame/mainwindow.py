@@ -10,7 +10,7 @@ try:
     from PyQt4 import QtCore, QtGui
     from PyQt4.QtGui import QImage, QLabel, QMessageBox, QScrollArea, QAction, QIcon, QPixmap, QCursor
     from PyQt4.QtCore import Qt
-    QtCore.Slot = QtCore.pyqtslot
+    QtCore.Slot = QtCore.pyqtSlot
     py_binding = 'PyQt4'
 except ImportError as e:
     print("PyQt4 not found, falling back to PySide")
