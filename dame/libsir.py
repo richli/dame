@@ -1,5 +1,5 @@
 from __future__ import print_function, division
-""" Wrapper for the C libsir.so 
+""" Wrapper for the C libsir.so
 
 All I need to wrap are some of the functions in sir_ez.h
 
@@ -24,12 +24,12 @@ MAXDES = 512
 
 # Structures
 class FILE(Structure):
-    # stdio FILE 
+    # stdio FILE
     pass
 
 class sir_head(Structure):
     _fields_ = [
-            ("nhead", c_int), 
+            ("nhead", c_int),
             ("nhtype", c_int),
             ("nsx", c_int),
             ("nsy", c_int),
@@ -153,7 +153,7 @@ def pix2latlon(x, y, sir_head):
     return (lon.value, lat.value)
 
 def print_sir_head(head):
-    """ Prints the SIR header 
+    """ Prints the SIR header
 
     Returns a string with the SIR header pretty-printed
 

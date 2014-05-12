@@ -1,6 +1,7 @@
 __author__ = "Richard Lindsley"
 
-import sys, os
+import sys
+import os
 import argparse
 import logging
 
@@ -16,10 +17,10 @@ try:
         sip.setapi('QTime', 2)
         sip.setapi('QUrl', 2)
         sip.setapi('QVariant', 2)
-    from PyQt4 import QtCore,QtGui
+    from PyQt4 import QtCore, QtGui
 except ImportError as e:
     print("PyQt4 not found, falling back to PySide")
-    from PySide import QtCore,QtGui
+    from PySide import QtCore, QtGui
 
 from .version import __version__
 from .mainwindow import MainWindow
@@ -32,13 +33,13 @@ from .mainwindow import MainWindow
 def main():
     parser = argparse.ArgumentParser(description="View SIR file(s)")
     parser.add_argument("sir_files", action="store", nargs='*',
-            help='List of SIR files to open')
+                        help='List of SIR files to open')
     parser.add_argument("-v", "--verbose", action="store_true",
-            help='Log INFO messages to stdout')
+                        help='Log INFO messages to stdout')
     parser.add_argument("--debug", action="store_true",
-            help='Log DEBUG messages to stdout')
+                        help='Log DEBUG messages to stdout')
     parser.add_argument('--version', action='version',
-            version='%(prog)s version {}'.format(__version__))
+                        version='%(prog)s version {}'.format(__version__))
     args = parser.parse_args()
 
     if args.verbose:

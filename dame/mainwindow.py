@@ -22,9 +22,10 @@ except ImportError as e:
 from . import version_string
 from dame import libsir
 
+
 #http://stackoverflow.com/questions/1736015/debugging-a-pyqt4-app
 def debug_trace():
-    '''Set a tracepoint in the Python debugger that works with Qt'''
+    """Set a tracepoint in the Python debugger that works with Qt."""
     if py_binding == 'PyQt4':
         from PyQt4.QtCore import pyqtRemoveInputHook
     elif py_binding == 'PySide':
@@ -63,14 +64,14 @@ class MainWindow(QtGui.QMainWindow):
         # Create popup windows (for zoomer and panner)
         self.zoom_win = QtGui.QWidget(self, Qt.Window | Qt.Tool)
         self.zoom_win.setSizePolicy(QtGui.QSizePolicy.Fixed,
-                QtGui.QSizePolicy.Fixed)
+                                    QtGui.QSizePolicy.Fixed)
         self.zoom_win_im = QLabel()
         self.zoom_win_im.setSizePolicy(QtGui.QSizePolicy.Ignored,
-                QtGui.QSizePolicy.Ignored)
+                                       QtGui.QSizePolicy.Ignored)
         #self.zoom_win.resize(150,150)
         #self.zoom_win.show()
         zoomer_layout = QtGui.QGridLayout()
-        zoomer_layout.setContentsMargins(0,0,0,0)
+        zoomer_layout.setContentsMargins(0, 0, 0, 0)
         zoomer_layout.addWidget(self.zoom_win_im)
         self.zoom_win.setLayout(zoomer_layout)
 
@@ -81,10 +82,10 @@ class MainWindow(QtGui.QMainWindow):
         self.note_text = QtGui.QTextEdit(parent=self.note_widget)
         self.note_widget.setWidget(self.note_text)
         self.note_widget.setFeatures(
-                QtGui.QDockWidget.DockWidgetClosable | 
-                QtGui.QDockWidget.DockWidgetMovable | 
-                QtGui.QDockWidget.DockWidgetFloatable | 
-                QtGui.QDockWidget.DockWidgetVerticalTitleBar)
+            QtGui.QDockWidget.DockWidgetClosable |
+            QtGui.QDockWidget.DockWidgetMovable |
+            QtGui.QDockWidget.DockWidgetFloatable |
+            QtGui.QDockWidget.DockWidgetVerticalTitleBar)
         self.addDockWidget(Qt.BottomDockWidgetArea, self.note_widget)
         self.note_widget.close()
         self.note_action = self.note_widget.toggleViewAction()
@@ -106,15 +107,17 @@ class MainWindow(QtGui.QMainWindow):
 
         # The groups
         self.status_sing_layout = QtGui.QHBoxLayout()
-        self.status_sing_layout.addWidget(self.status_sing_coord, 0, Qt.AlignRight)
-        self.status_sing_layout.addWidget(self.status_sing_pixinfo, 1, Qt.AlignRight)
+        self.status_sing_layout.addWidget(self.status_sing_coord, 0,
+                                          Qt.AlignRight)
+        self.status_sing_layout.addWidget(self.status_sing_pixinfo, 1,
+                                          Qt.AlignRight)
         self.status_comp_layout = QtGui.QHBoxLayout()
         self.status_comp_layout.addWidget(self.status_left_pixinfo, 0)
         self.status_comp_layout.addWidget(self.status_comp_coord, 1)
         self.status_comp_layout.addWidget(self.status_right_pixinfo, 0)
 
-        self.status_sing_layout.setContentsMargins(0,0,0,0)
-        self.status_comp_layout.setContentsMargins(0,0,0,0)
+        self.status_sing_layout.setContentsMargins(0, 0, 0, 0)
+        self.status_comp_layout.setContentsMargins(0, 0, 0, 0)
 
         self.status_sing = QtGui.QWidget()
         self.status_sing.setLayout(self.status_sing_layout)
@@ -224,7 +227,7 @@ class MainWindow(QtGui.QMainWindow):
 
         # http://stackoverflow.com/questions/11643221/are-there-default-icons-in-pyqt-pyside
         # TODO: Add icons in a better way. See how Picard does it.
-        QIcon.setThemeName("gnome") # TODO: temporary
+        QIcon.setThemeName("gnome")  # TODO: temporary
         self.open_action.setIcon(QIcon.fromTheme("document-open"))
         self.close_action.setIcon(QIcon.fromTheme("window-close"))
         self.exit_action.setIcon(QIcon.fromTheme("application-exit"))
@@ -271,19 +274,20 @@ class MainWindow(QtGui.QMainWindow):
 
     @QtCore.Slot()
     def open_file(self):
-        """ Display open file dialog """
-        filename = QtGui.QFileDialog.getOpenFileName(self, 
-                "Open SIR file", 
-                QtCore.QDir.homePath(), 
-                "SIR files (*.sir *.ave);;Any file (*)"
-                )
+        """Display open file dialog."""
+        filename = QtGui.QFileDialog.getOpenFileName(self,
+                                                     "Open SIR file",
+                                                     QtCore.QDir.homePath(),
+                                                     ("SIR files (*.sir *.ave)"
+                                                      ";;Any file (*)")
+                                                     )
         if py_binding == 'PySide':
             filename = filename[0]
         if filename:
             self.load_sir(filename)
 
     def load_sir(self, filename):
-        if os.access(filename, os.F_OK|os.R_OK):
+        if os.access(filename, os.F_OK | os.R_OK):
             self.statusBar().showMessage("Loading")
             self.mainview.load_sir(filename)
             self.statusBar().showMessage("Loaded", 2000)
@@ -298,7 +302,7 @@ class MainWindow(QtGui.QMainWindow):
 
     @QtCore.Slot()
     def close_file(self):
-        """ Close file """
+        """Close file."""
         logging.info("Closing SIR file")
         self.mainview.close_file()
         self.statusBar().showMessage("SIR closed", 2000)
@@ -315,7 +319,7 @@ class MainWindow(QtGui.QMainWindow):
 
     @QtCore.Slot()
     def show_about(self):
-        """ Display about popup """
+        """Display about popup."""
         about_text= """
                 Dame {}
                 Copyright 2013 Richard Lindsley
@@ -324,21 +328,26 @@ class MainWindow(QtGui.QMainWindow):
 
     @QtCore.Slot()
     def show_range(self):
-        """ Display image range popup """
+        """Display image range popup."""
         win = RangeWindow()
-        win.min_text.setText(str(self.mainview.sir_files[self.mainview.cur_tab]['vmin']))
-        win.max_text.setText(str(self.mainview.sir_files[self.mainview.cur_tab]['vmax']))
+        win.min_text.setText(str(
+            self.mainview.sir_files[self.mainview.cur_tab]['vmin']))
+        win.max_text.setText(str(
+            self.mainview.sir_files[self.mainview.cur_tab]['vmax']))
         if win.exec_() == QtGui.QDialog.Accepted:
             win_range = win.getRange()
-            self.mainview.sir_files[self.mainview.cur_tab]['vmin'] = win_range[0]
-            self.mainview.sir_files[self.mainview.cur_tab]['vmax'] = win_range[1]
+            self.mainview.sir_files[self.mainview.cur_tab]['vmin'] = \
+                win_range[0]
+            self.mainview.sir_files[self.mainview.cur_tab]['vmax'] = \
+                win_range[1]
             self.mainview.update_image(self.mainview.cur_tab)
             self.mainview.update_view()
 
     @QtCore.Slot()
     def print_header(self):
-        """ Display SIR header info """
-        sir_head = libsir.print_sir_head(self.mainview.sir_files[self.mainview.cur_tab]['header'])
+        """Display SIR header info."""
+        sir_head = libsir.print_sir_head(
+            self.mainview.sir_files[self.mainview.cur_tab]['header'])
         # TODO: Maybe make this a modeless dialog instead of modal? Use a dock
         # widget?
         box = QMessageBox()
@@ -347,7 +356,7 @@ class MainWindow(QtGui.QMainWindow):
         box.exec_()
 
     def update_zoomer(self):
-        """ Update the zoomer, both the image as well as the popup """
+        """Update the zoomer, both the image as well as the popup."""
         if 'pix_loc' not in self.mainview.sir_files[self.mainview.cur_tab]:
             return
         try:
@@ -356,20 +365,20 @@ class MainWindow(QtGui.QMainWindow):
             winsize = rect_w * self.mainview.sir_files[self.mainview.cur_tab]['zoomer_factor']
             if self.mainview.cur_tab == "split":
                 pixmaps = (self.mainview.sir_files['left']['pixmap'].copy(),
-                        self.mainview.sir_files['right']['pixmap'].copy())
+                           self.mainview.sir_files['right']['pixmap'].copy())
             else:
                 pixmaps = \
                 (self.mainview.sir_files[self.mainview.cur_tab]['pixmap'].copy(),)
 
             for pixmap_i, pixmap in enumerate(pixmaps):
                 # Upper left corner
-                if loc.x() < rect_w/2: 
+                if loc.x() < rect_w/2:
                     rect_x = -0.5
                 elif loc.x() > pixmap.width() - rect_w/2:
                     rect_x = pixmap.width() - rect_w - 0.5
                 else:
                     rect_x = loc.x() - rect_w/2
-                if loc.y() < rect_w/2: 
+                if loc.y() < rect_w/2:
                     rect_y = -0.5
                 elif loc.y() > pixmap.height() - rect_w/2:
                     rect_y = pixmap.height() - rect_w - 0.5
@@ -382,7 +391,7 @@ class MainWindow(QtGui.QMainWindow):
                 # Draw the image with the zoomer region outlined
                 p = QtGui.QPainter()
                 p.begin(pixmap)
-                p.setPen(QtGui.QColor("#FFFFFF")) # White stroke
+                p.setPen(QtGui.QColor("#FFFFFF"))  # White stroke
                 p.drawRect(rect_x, rect_y, rect_w, rect_w)
                 p.end()
                 if self.mainview.cur_tab in ("left", "right", "cross"):
@@ -398,7 +407,7 @@ class MainWindow(QtGui.QMainWindow):
             # Update the zoomer window
             if self.mainview.cur_tab == "split":
                 pixmaps = (self.mainview.sir_files['left']['pixmap'],
-                        self.mainview.sir_files['right']['pixmap'])
+                           self.mainview.sir_files['right']['pixmap'])
             else:
                 pixmaps = \
                 (self.mainview.sir_files[self.mainview.cur_tab]['pixmap'],)
@@ -411,29 +420,29 @@ class MainWindow(QtGui.QMainWindow):
                 pixmap = pixmap_src.copy(rect_x, rect_y, rect_w, rect_w)
                 # scale it
                 pixmap = pixmap.scaled(winsize, winsize,
-                        Qt.KeepAspectRatioByExpanding)
+                                       Qt.KeepAspectRatioByExpanding)
 
                 # Add crosshair to zoomer window; note that the crosshair
                 # won't be centered if the region is at the edges
                 p = QtGui.QPainter()
                 p.begin(pixmap)
                 # Highlight selected pixel
-                #p.setPen(QtGui.QColor("#000000")) # Black stroke
-                p.setPen(QtGui.QColor("#FFFFFF")) # White stroke
+                #p.setPen(QtGui.QColor("#000000"))  # Black stroke
+                p.setPen(QtGui.QColor("#FFFFFF"))  # White stroke
                 zoom_fac = self.mainview.sir_files[self.mainview.cur_tab]['zoomer_factor']
                 # Top left of magnified pixel
-                mag_pix = (zoom_fac * (loc.x() - rect_x + 1) - zoom_fac/2, 
-                        zoom_fac * (loc.y() - rect_y + 1) - zoom_fac/2)
+                mag_pix = (zoom_fac * (loc.x() - rect_x + 1) - zoom_fac/2,
+                           zoom_fac * (loc.y() - rect_y + 1) - zoom_fac/2)
                 # Center of magnified pixel
-                mag_pix_cen = (zoom_fac * (loc.x() - rect_x + 1), 
-                        zoom_fac * (loc.y() - rect_y + 1))
+                mag_pix_cen = (zoom_fac * (loc.x() - rect_x + 1),
+                               zoom_fac * (loc.y() - rect_y + 1))
                 p.drawRect(mag_pix[0], mag_pix[1], zoom_fac, zoom_fac)
                 # Draw crosshairs
-                p.setPen(QtGui.QColor("#FFFFFF")) # White stroke
-                p.drawLine(mag_pix_cen[0],0,mag_pix_cen[0],mag_pix[1]-1) # vertical line, top
-                p.drawLine(mag_pix_cen[0],mag_pix[1]+zoom_fac, mag_pix_cen[0],winsize-0) # vertical line, bottom
-                p.drawLine(0,mag_pix_cen[1],mag_pix[0]-1,mag_pix_cen[1]) # horizontal line, left
-                p.drawLine(mag_pix[0]+zoom_fac,mag_pix_cen[1],winsize-0,mag_pix_cen[1]) # horizontal line, right
+                p.setPen(QtGui.QColor("#FFFFFF"))  # White stroke
+                p.drawLine(mag_pix_cen[0],0,mag_pix_cen[0],mag_pix[1]-1)  # vertical line, top
+                p.drawLine(mag_pix_cen[0],mag_pix[1]+zoom_fac, mag_pix_cen[0],winsize-0)  # vertical line, bottom
+                p.drawLine(0,mag_pix_cen[1],mag_pix[0]-1,mag_pix_cen[1])  # horizontal line, left
+                p.drawLine(mag_pix[0]+zoom_fac,mag_pix_cen[1],winsize-0,mag_pix_cen[1])  # horizontal line, right
                 p.end()
 
                 if len(pixmaps) == 1:
@@ -469,40 +478,40 @@ class MainWindow(QtGui.QMainWindow):
             self.status_comp_coord.setVisible(False)
 
     def update_statusbar_pos(self, x_im, y_im):
-        """ Update with position at image index x, y """
+        """Update with position at image index x, y."""
         self.statusBar().clearMessage()
         nsx = self.mainview.sir_files[self.mainview.cur_tab]['header'].nsx
         nsy = self.mainview.sir_files[self.mainview.cur_tab]['header'].nsy
         # Convert from 0-based to 1-based indexing
         # (I've double-checked the values returned here using sir_util2a)
-        y = nsy - y_im # Convert image y coord to SIR y coord
+        y = nsy - y_im  # Convert image y coord to SIR y coord
         x = x_im + 1
         if x > 0 and y > 0 and x <= nsx and y <= nsy:
             # Note that sir_data is 0-based indexing, but pix2latlon is 1-based
             lon, lat = libsir.pix2latlon(x, y,
-                    self.mainview.sir_files[self.mainview.cur_tab]['header'])
+                                         self.mainview.sir_files[self.mainview.cur_tab]['header'])
             if self.mainview.cur_tab in ("left", "right"):
                 self.status_sing_coord.setVisible(True)
                 stat_text = "x = {}, y = {}   lat = {:0.4f}, lon = {:0.4f} value = {:0.4f}".format(
-                        x, y, lat, lon,
-                        self.mainview.sir_files[self.mainview.cur_tab]['data'][y_im, x_im])
+                    x, y, lat, lon,
+                    self.mainview.sir_files[self.mainview.cur_tab]['data'][y_im, x_im])
                 self.status_sing_coord.setText(stat_text)
-            elif self.mainview.cur_tab in ("split","fade"):
+            elif self.mainview.cur_tab in ("split", "fade"):
                 self.status_comp_coord.setVisible(True)
                 stat_text = "x = {}, y = {}   lat = {:0.4f}, lon = {:0.4f} left value = {:0.4f} right value = {:0.4f}".format(
-                        x, y, lat, lon,
-                        self.mainview.sir_files['left']['data'][y_im, x_im],
-                        self.mainview.sir_files['right']['data'][y_im, x_im])
+                    x, y, lat, lon,
+                    self.mainview.sir_files['left']['data'][y_im, x_im],
+                    self.mainview.sir_files['right']['data'][y_im, x_im])
                 self.status_comp_coord.setText(stat_text)
 
     def sizeHint(self):
-        """ Override the suggested size """
-        return QtCore.QSize(1000,800)
+        """Override the suggested size."""
+        return QtCore.QSize(1000, 800)
 
     # Menu events
     @QtCore.Slot()
     def update_zoomer_opts(self, draw_win=True):
-        """ Given a menu change, this sets zoomer options and updates """
+        """Given a menu change, this sets zoomer options and updates."""
         file_dict = self.mainview.sir_files[self.mainview.cur_tab]
         # Is zoomer enabled?
         file_dict['zoomer_on'] = self.zoomer_action.isChecked()
@@ -559,7 +568,7 @@ class MainWindow(QtGui.QMainWindow):
             return
 
         # Increment im_pos if valid key
-        # Note that im_pos is 0-based, so 
+        # Note that im_pos is 0-based, so
         # it ranges from 0 to nsx-1/nsy-1 inclusive
         im_pos = self.mainview.sir_files[self.mainview.cur_tab]['pix_loc']
         nsx = self.mainview.sir_files[self.mainview.cur_tab]['header'].nsx
@@ -602,7 +611,8 @@ class RangeWindow(QtGui.QDialog):
         max_text.setValidator(QtGui.QDoubleValidator())
 
         buttons = QtGui.QDialogButtonBox(QtGui.QDialogButtonBox.Ok |
-                QtGui.QDialogButtonBox.Cancel, Qt.Horizontal, parent=self)
+                                         QtGui.QDialogButtonBox.Cancel,
+                                         Qt.Horizontal, parent=self)
         buttons.accepted.connect(self.accept)
         buttons.rejected.connect(self.reject)
 
@@ -638,11 +648,11 @@ class MainViewer(QtGui.QWidget):
 
         # Variables to store
         self.parent = parent
-        self.panning = None # a flag if we're panning with the mouse currently
-        self.scanning = None # a flag if we're scanning pixel values with the mouse
-        self.scanning_side = None # For split screen, which side did we start on
-        self.cur_tab = None # Which tab name we're currently on
-        self.sir_files = {} # Holds SIR files and associated info for each tab
+        self.panning = None  # a flag if we're panning with the mouse currently
+        self.scanning = None  # a flag if we're scanning pixel values with the mouse
+        self.scanning_side = None  # For split screen, which side did we start on
+        self.cur_tab = None  # Which tab name we're currently on
+        self.sir_files = {}  # Holds SIR files and associated info for each tab
 
         # Set context menu
         self.setContextMenuPolicy(Qt.ActionsContextMenu)
@@ -669,7 +679,7 @@ class MainViewer(QtGui.QWidget):
 
         # Layout
         vbox = QtGui.QVBoxLayout()
-        vbox.setContentsMargins(0,0,0,0)
+        vbox.setContentsMargins(0, 0, 0, 0)
         vbox.addWidget(self.tabbar)
         vbox.addWidget(self.stacked_widget)
         self.setLayout(vbox)
@@ -680,10 +690,10 @@ class MainViewer(QtGui.QWidget):
         if file_index in self.sir_files:
             msg = QtGui.QMessageBox(parent=self)
             msg.setText(
-                    "{} is already loaded. Load {} in comparison view?".format(
-                        self.sir_files[file_index]['filename'], filename))
+                "{} is already loaded. Load {} in comparison view?".format(
+                    self.sir_files[file_index]['filename'], filename))
             msg.setStandardButtons(QtGui.QMessageBox.Yes |
-                    QtGui.QMessageBox.No)
+                                   QtGui.QMessageBox.No)
             msg.setDefaultButton(QtGui.QMessageBox.Yes)
             msg.setIcon(QtGui.QMessageBox.Question)
             msg_ret = msg.exec_()
@@ -695,15 +705,15 @@ class MainViewer(QtGui.QWidget):
         logging.info("Loading {}".format(filename))
         sir_head, sir_data = libsir.get_sir(filename)
         self.sir_files[file_index] = {
-                'filename': filename, 
-                'data': sir_data,
-                'header': sir_head}
+            'filename': filename,
+            'data': sir_data,
+            'header': sir_head}
 
         # Make sure the comparison image is compatible
         if file_index == 'right':
             # Assume the header (or the parts we use, at least) is the same
             # between the files
-            self.sir_files['split'] = {'header': sir_head} 
+            self.sir_files['split'] = {'header': sir_head}
             self.sir_files['fade'] = {}
             old_head = self.sir_files['left']['header']
             if old_head.nsx != sir_head.nsx or \
@@ -736,7 +746,7 @@ class MainViewer(QtGui.QWidget):
         # Single mode
         if len(self.sir_files) < 2:
             logging.info("toggleComparison: single mode")
-            self.tabbar.setCurrentIndex(0) # So the active tab doesn't change when I remove tabs below
+            self.tabbar.setCurrentIndex(0)  # So the active tab doesn't change when I remove tabs below
             # Remove tabs
             while self.tabbar.count() > 0:
                 self.tabbar.removeTab(0)
@@ -750,10 +760,10 @@ class MainViewer(QtGui.QWidget):
             self.tabbar.addTab("Split view")
             self.tabbar.addTab("Crossfade view")
             self.tabbar.addTab(self.sir_files['right']['filename'])
-            self.tabbar.setTabEnabled(2, False) # TODO: Temp until crossfade is ready
+            self.tabbar.setTabEnabled(2, False)  # TODO: Temp until crossfade is ready
 
     def tabSelect(self, index):
-        """ Update stuff based on what tab was selected """
+        """Update stuff based on what tab was selected."""
         logging.info("Selected tab {}".format(index))
         if index == 0:
             self.cur_tab = 'left'
@@ -765,7 +775,7 @@ class MainViewer(QtGui.QWidget):
             self.cur_tab = 'right'
 
         # index of -1 means the tabbar is empty
-        if index in (-1,0,3):
+        if index in (-1, 0, 3):
             self.parent.open_action.setEnabled(True)
             self.parent.close_action.setEnabled(True)
             self.parent.prop_action.setEnabled(True)
@@ -779,7 +789,7 @@ class MainViewer(QtGui.QWidget):
         self.update_view()
 
     def update_image(self, tabname):
-        """ Refresh the image in the tab 
+        """Refresh the image in the tab.
 
         tabname can be: "left", "right", "split", "fade"
 
@@ -800,21 +810,22 @@ class MainViewer(QtGui.QWidget):
             sir_scale = ma.masked_less_equal(sirdata, anodata, copy=True)
             sir_scale += v_offset
             sir_scale *= v_scale
-            sir_scale = sir_scale.filled(0) # all nodata values are set to 0
+            sir_scale = sir_scale.filled(0)  # all nodata values are set to 0
             # Clip to 0,255
             sir_scale[sir_scale < 0] = 0
             sir_scale[sir_scale > 255] = 255
             # Ensure uint8 data and C contiguous data
-            sir_scale = np.require(sir_scale, np.uint8, 'C') 
+            sir_scale = np.require(sir_scale, np.uint8, 'C')
 
             # Construct image from sir_scale
             # http://www.swharden.com/blog/2013-06-03-realtime-image-pixelmap-from-numpy-array-data-in-qt/
-            # Note that I use the bytesPerLine option here. Without it, the data
-            # must be 32-bit aligned (4 bytes). This means with uint8 data that
-            # the image width must be a multiple of 4. This does not apply to
-            # all SIR images, so I set bytesPerLine to be 
+            # Note that I use the bytesPerLine option here. Without it, the
+            # data must be 32-bit aligned (4 bytes). This means with uint8 data
+            # that the image width must be a multiple of 4. This does not apply
+            # to all SIR images, so I set bytesPerLine to be
             # nsx (items) * 1 (bytes/item)
-            image = QImage(sir_scale.data, nsx, nsy, nsx, QImage.Format_Indexed8)
+            image = QImage(sir_scale.data, nsx, nsy, nsx,
+                           QImage.Format_Indexed8)
             #ctab = []
             #for i in xrange(256):
             #    ctab.append(QtGui.qRgb(i,i,i))
@@ -902,15 +913,18 @@ class MainViewer(QtGui.QWidget):
                 self.scanning = mouse.pos()
 
                 if self.cur_tab in ("left", "right", "fade"):
-                    im_pos = self.single_image.image.mapFromGlobal(self.mapToGlobal(mouse.pos()))
+                    im_pos = self.single_image.image.mapFromGlobal(
+                        self.mapToGlobal(mouse.pos()))
                 elif self.cur_tab in ("split",):
                     # Figure out which widget has the mouse
                     if self.left_image.image.underMouse():
                         self.scanning_side = 'left'
-                        im_pos = self.left_image.image.mapFromGlobal(self.mapToGlobal(mouse.pos()))
+                        im_pos = self.left_image.image.mapFromGlobal(
+                            self.mapToGlobal(mouse.pos()))
                     elif self.right_image.image.underMouse():
                         self.scanning_side = 'right'
-                        im_pos = self.right_image.image.mapFromGlobal(self.mapToGlobal(mouse.pos()))
+                        im_pos = self.right_image.image.mapFromGlobal(
+                            self.mapToGlobal(mouse.pos()))
                     else:
                         logging.error("neither image is under mouse?!")
 
@@ -941,12 +955,15 @@ class MainViewer(QtGui.QWidget):
             elif self.scanning:
                 # Switch mouse position coord from QMainWindow to self.imagelabel (QLabel)
                 if self.cur_tab in ("left", "right", "fade"):
-                    im_pos = self.single_image.image.mapFromGlobal(self.mapToGlobal(mouse.pos()))
+                    im_pos = self.single_image.image.mapFromGlobal(
+                        self.mapToGlobal(mouse.pos()))
                 elif self.cur_tab in ("split",):
                     if self.scanning_side == 'left':
-                        im_pos = self.left_image.image.mapFromGlobal(self.mapToGlobal(mouse.pos()))
+                        im_pos = self.left_image.image.mapFromGlobal(
+                            self.mapToGlobal(mouse.pos()))
                     elif self.scanning_side == 'right':
-                        im_pos = self.right_image.image.mapFromGlobal(self.mapToGlobal(mouse.pos()))
+                        im_pos = self.right_image.image.mapFromGlobal(
+                            self.mapToGlobal(mouse.pos()))
 
                 self.sir_files[self.cur_tab]['pix_loc'] = im_pos
                 # Update statusbar and zoomer
@@ -954,7 +971,7 @@ class MainViewer(QtGui.QWidget):
                 self.parent.update_zoomer()
         else:
             mouse.ignore()
-    
+
     def mouseReleaseEvent(self, mouse):
         if self.cur_tab in self.sir_files:
             if mouse.button() == Qt.MiddleButton and self.panning:
@@ -969,21 +986,21 @@ class MainViewer(QtGui.QWidget):
             mouse.ignore()
 
     def wheelEvent(self, wheel):
-        """ Normally this doesn't need reimplementation, but it does for split view """
+        """Normally this doesn't need reimplementation, but it does for split view."""
         if len(self.sir_files) > 0:
             ds = -wheel.delta() / 4
 
-            if self.cur_tab == 'split': 
+            if self.cur_tab == 'split':
                 scrollers = (self.left_image, self.right_image)
-            else: 
+            else:
                 scrollers = (self.single_image,)
 
-            for scroller in scrollers: 
+            for scroller in scrollers:
                 if wheel.orientation() == Qt.Horizontal:
-                    hbar = scroller.horizontalScrollBar() 
+                    hbar = scroller.horizontalScrollBar()
                     hbar.setValue(hbar.value()+ds)
                 elif wheel.orientation() == Qt.Vertical:
-                    vbar = scroller.verticalScrollBar() 
+                    vbar = scroller.verticalScrollBar()
                     vbar.setValue(vbar.value()+ds)
 
 
@@ -994,7 +1011,7 @@ class ImageView(QtGui.QScrollArea):
         # Define the image
         self.image = QLabel()
         self.image.setSizePolicy(QtGui.QSizePolicy.Ignored,
-                QtGui.QSizePolicy.Ignored)
+                                 QtGui.QSizePolicy.Ignored)
         self.image.setScaledContents(True)
         self.image.adjustSize()
         self.image.setHidden(True)
@@ -1018,4 +1035,3 @@ class ImageView(QtGui.QScrollArea):
     def wheelEvent(self, wheel):
         # This passes the wheel event to MainViewer()
         wheel.ignore()
-
