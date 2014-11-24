@@ -201,14 +201,17 @@ class MainWindow(QtGui.QMainWindow):
         self.zoom_size_2_action = QAction("17x17 window", self)
         self.zoom_size_3_action = QAction("29x29 window", self)
         self.zoom_size_4_action = QAction("45x45 window", self)
+        self.zoom_size_5_action = QAction("65x65 window", self)
         self.zoom_size_1_action.setStatusTip("Set zoom region to 9x9 pixels")
         self.zoom_size_2_action.setStatusTip("Set zoom region to 17x17 pixels")
         self.zoom_size_3_action.setStatusTip("Set zoom region to 29x29 pixels")
         self.zoom_size_4_action.setStatusTip("Set zoom region to 45x45 pixels")
+        self.zoom_size_5_action.setStatusTip("Set zoom region to 65x65 pixels")
         self.zoom_size_1_action.setCheckable(True)
         self.zoom_size_2_action.setCheckable(True)
         self.zoom_size_3_action.setCheckable(True)
         self.zoom_size_4_action.setCheckable(True)
+        self.zoom_size_5_action.setCheckable(True)
 
         # Group zoomer actions and connect slots
         self.zoom_factor_group = QtGui.QActionGroup(self)
@@ -223,6 +226,7 @@ class MainWindow(QtGui.QMainWindow):
         self.zoom_size_group.addAction(self.zoom_size_2_action)
         self.zoom_size_group.addAction(self.zoom_size_3_action)
         self.zoom_size_group.addAction(self.zoom_size_4_action)
+        self.zoom_size_group.addAction(self.zoom_size_5_action)
         self.zoom_size_group.triggered.connect(self.update_zoomer_opts)
 
         # # Mode actions
@@ -276,6 +280,7 @@ class MainWindow(QtGui.QMainWindow):
         menu.addAction(self.zoom_size_2_action)
         menu.addAction(self.zoom_size_3_action)
         menu.addAction(self.zoom_size_4_action)
+        menu.addAction(self.zoom_size_5_action)
         menu = self.menuBar().addMenu("&Help")
         menu.addAction(self.about_action)
 
@@ -567,6 +572,8 @@ class MainWindow(QtGui.QMainWindow):
             file_dict['zoomer_size'] = 29
         elif zsize is self.zoom_size_4_action:
             file_dict['zoomer_size'] = 45
+        elif zsize is self.zoom_size_5_action:
+            file_dict['zoomer_size'] = 65
 
         if draw_win:
             # Compute zoomer window size and show/hide it
